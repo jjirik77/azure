@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Universe of AI: An Interactive Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827;
+            color: #F3F4F6;
+        }
+        .glassmorphism {
+            background: rgba(31, 41, 55, 0.5);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+        .tab-button.active {
+            background-color: #3B82F6;
+            color: white;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 10px;
+            height: 10px;
+            background-color: #3B82F6;
+            border-radius: 50%;
+            border: 2px solid #111827;
+        }
+        .neuron {
+            transition: all 0.3s ease;
+        }
+        .neuron.active {
+            filter: drop-shadow(0 0 8px #60A5FA);
+            fill: #60A5FA;
+        }
+        .connection {
+            transition: stroke 0.3s ease, stroke-width 0.3s ease;
+        }
+        .connection.active {
+            stroke: #60A5FA;
+            stroke-width: 2.5;
+        }
+        /* Styles for the AI Pyramid visualization */
+        .pyramid-level {
+            background-color: #374151; /* gray-700 */
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            cursor: pointer;
+        }
+        .pyramid-level:hover {
+            transform: scale(1.02);
+        }
+        .pyramid-level.active {
+            background-color: #3B82F6; /* blue-500 */
+            color: white;
+        }
+        .input-toggle {
+            cursor: pointer;
+            border: 2px solid #4B5563;
+        }
+        .input-toggle.active {
+            background-color: #3B82F6;
+            border-color: #60A5FA;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="container mx-auto p-4 md:p-8">
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-6xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">The Universe of AI</h1>
+            <p class="mt-4 text-lg text-gray-400">An Interactive Journey into Artificial Intelligence</p>
+        </header>
+
+        <main>
+            <!-- Navigation Tabs -->
+            <div class="flex flex-wrap justify-center mb-8 space-x-2 md:space-x-4">
+                <button class="tab-button px-4 py-2 rounded-lg font-semibold transition active" onclick="showTab('what-is-ai')">What is AI?</button>
+                <button class="tab-button px-4 py-2 rounded-lg font-semibold transition" onclick="showTab('timeline')">Timeline</button>
+                <button class="tab-button px-4 py-2 rounded-lg font-semibold transition" onclick="showTab('levels-of-ai')">Levels of AI</button>
+                <button class="tab-button px-4 py-2 rounded-lg font-semibold transition" onclick="showTab('neural-network')">Neural Network</button>
+            </div>
+
+            <!-- Content Sections -->
+            <div id="content">
+                <!-- What is AI? Section -->
+                <section id="what-is-ai" class="tab-content glassmorphism p-6 md:p-8">
+                    <h2 class="text-2xl font-bold mb-4 text-center">What is Artificial Intelligence?</h2>
+                    <p class="text-center text-gray-300 mb-8">AI is a broad field of computer science focused on creating smart machines capable of performing tasks that typically require human intelligence. Explore the main branches below.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div class="bg-gray-800 p-6 rounded-lg text-center hover:bg-gray-700 transition cursor-pointer" onclick="showAiExplanation('ml')">
+                            <h3 class="text-xl font-semibold mb-2">Machine Learning</h3>
+                            <p class="text-sm text-gray-400">Algorithms that learn from data.</p>
+                        </div>
+                        <div class="bg-gray-800 p-6 rounded-lg text-center hover:bg-gray-700 transition cursor-pointer" onclick="showAiExplanation('dl')">
+                            <h3 class="text-xl font-semibold mb-2">Deep Learning</h3>
+                            <p class="text-sm text-gray-400">A subset of ML using neural networks.</p>
+                        </div>
+                        <div class="bg-gray-800 p-6 rounded-lg text-center hover:bg-gray-700 transition cursor-pointer" onclick="showAiExplanation('nlp')">
+                            <h3 class="text-xl font-semibold mb-2">Natural Language Processing</h3>
+                            <p class="text-sm text-gray-400">Understanding human language.</p>
+                        </div>
+                        <div class="bg-gray-800 p-6 rounded-lg text-center hover:bg-gray-700 transition cursor-pointer" onclick="showAiExplanation('cv')">
+                            <h3 class="text-xl font-semibold mb-2">Computer Vision</h3>
+                            <p class="text-sm text-gray-400">Interpreting the visual world.</p>
+                        </div>
+                    </div>
+                    <div id="ai-explanation-box" class="mt-8 p-6 bg-gray-900 rounded-lg hidden">
+                        <h4 id="ai-explanation-title" class="text-lg font-bold text-blue-400"></h4>
+                        <p id="ai-explanation-text" class="mt-2 text-gray-300"></p>
+                    </div>
+                </section>
+
+                <!-- Timeline Section -->
+                <section id="timeline" class="tab-content hidden glassmorphism p-6 md:p-8">
+                    <h2 class="text-2xl font-bold mb-8 text-center">A Brief History of AI</h2>
+                    <div class="relative border-l-2 border-blue-500 pl-8">
+                        <div class="timeline-item mb-8">
+                            <h3 class="font-semibold text-lg">1950 - The Turing Test</h3>
+                            <p class="text-gray-400">Alan Turing proposes a test for machine intelligence, a cornerstone of AI philosophy.</p>
+                        </div>
+                        <div class="timeline-item mb-8">
+                            <h3 class="font-semibold text-lg">1956 - The Birth of AI</h3>
+                            <p class="text-gray-400">The term "Artificial Intelligence" is coined at the Dartmouth Conference.</p>
+                        </div>
+                         <div class="timeline-item mb-8">
+                            <h3 class="font-semibold text-lg">1997 - Deep Blue vs. Kasparov</h3>
+                            <p class="text-gray-400">IBM's Deep Blue chess computer defeats world champion Garry Kasparov.</p>
+                        </div>
+                        <div class="timeline-item mb-8">
+                            <h3 class="font-semibold text-lg">2012 - AlexNet Revolution</h3>
+                            <p class="text-gray-400">A deep neural network called AlexNet drastically improves image recognition, sparking the deep learning boom.</p>
+                        </div>
+                        <div class="timeline-item mb-8">
+                            <h3 class="font-semibold text-lg">2018 - Transformer Models</h3>
+                            <p class="text-gray-400">Google introduces BERT, a transformer-based model that revolutionizes natural language processing.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h3 class="font-semibold text-lg">2022-Present - Generative AI Explosion</h3>
+                            <p class="text-gray-400">Models like GPT-3, DALL-E 2, and Stable Diffusion make high-quality generative AI widely accessible.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Levels of AI Section -->
+                <section id="levels-of-ai" class="tab-content hidden glassmorphism p-6 md:p-8">
+                    <h2 class="text-2xl font-bold mb-4 text-center">The LLM Application Pyramid</h2>
+                    <p class="text-center text-gray-300 mb-8">LLM applications can be seen as a pyramid of increasing capability. Click on a level to learn more.</p>
+                    
+                    <div class="w-full max-w-md mx-auto space-y-1">
+                        <!-- Pyramid levels will be injected by JS -->
+                        <div id="pyramid-container"></div>
+                    </div>
+
+                    <!-- Explanation Box -->
+                    <div id="level-explanation-box" class="mt-8 p-6 bg-gray-900 rounded-lg min-h-[120px]">
+                        <h4 id="level-explanation-title" class="text-lg font-bold text-blue-400"></h4>
+                        <p id="level-explanation-text" class="mt-2 text-gray-300"></p>
+                    </div>
+                </section>
+
+                <!-- Neural Network Section -->
+                <section id="neural-network" class="tab-content hidden glassmorphism p-6 md:p-8">
+                    <h2 class="text-2xl font-bold mb-4 text-center">Interactive Neural Network</h2>
+                    <p class="text-center text-gray-300 mb-8">This network learns to solve a classic problem: XOR. The goal is to output '1' if the inputs are different, and '0' if they are the same. Use the toggles to set the inputs, then see what the network predicts!</p>
+                    
+                    <div class="flex flex-col md:flex-row items-center justify-center gap-8">
+                        <!-- Input Controls -->
+                        <div class="flex flex-col items-center gap-4">
+                            <h3 class="font-semibold">Inputs</h3>
+                            <div class="flex items-center gap-4">
+                                <span>Input 1:</span>
+                                <div id="input-0" class="input-toggle w-16 h-8 rounded-full flex items-center p-1 transition" onclick="toggleInput(0)">
+                                    <div class="w-6 h-6 bg-white rounded-full shadow-md transform transition"></div>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <span>Input 2:</span>
+                                <div id="input-1" class="input-toggle w-16 h-8 rounded-full flex items-center p-1 transition" onclick="toggleInput(1)">
+                                    <div class="w-6 h-6 bg-white rounded-full shadow-md transform transition"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SVG Visualization -->
+                        <svg id="nn-svg" width="300" height="200"></svg>
+                        
+                        <!-- Output Display -->
+                        <div class="flex flex-col items-center gap-2">
+                            <h3 class="font-semibold">Output</h3>
+                            <div id="nn-output" class="w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold border-4 border-gray-600 transition">?</div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-8 flex flex-col sm:flex-row justify-center items-center gap-4">
+                        <button class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition" onclick="predict()">Predict</button>
+                        <button class="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition" onclick="trainNetwork()">Train Network</button>
+                        <button class="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition" onclick="resetNetwork()">Reset</button>
+                    </div>
+                    <p id="nn-status" class="mt-4 text-center text-lg font-semibold">Status: Untrained</p>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // --- Tab Navigation ---
+        let currentTab = 'what-is-ai';
+        const tabs = document.querySelectorAll('.tab-content');
+        const tabButtons = document.querySelectorAll('.tab-button');
+
+        function showTab(tabId) {
+            tabs.forEach(tab => {
+                if (tab.id === tabId) {
+                    tab.classList.remove('hidden');
+                } else {
+                    tab.classList.add('hidden');
+                }
+            });
+
+            tabButtons.forEach(button => {
+                if (button.getAttribute('onclick').includes(tabId)) {
+                    button.classList.add('active');
+                } else {
+                    button.classList.remove('active');
+                }
+            });
+            currentTab = tabId;
+            if (tabId === 'levels-of-ai') {
+                showLevelExplanation('l6');
+            } else if (tabId === 'neural-network') {
+                resetNetwork();
+            }
+        }
+
+        // --- "What is AI?" Section Logic ---
+        const aiExplanations = {
+            ml: {
+                title: "Machine Learning (ML)",
+                text: "This is the most common type of AI. Instead of being explicitly programmed, ML systems use data to train themselves. For example, a spam filter learns to identify junk mail by analyzing thousands of emails you've marked as spam."
+            },
+            dl: {
+                title: "Deep Learning (DL)",
+                text: "A powerful subset of Machine Learning that uses 'neural networks' with many layers (hence 'deep'). Deep learning is behind many modern marvels, like voice assistants, language translation, and self-driving car perception."
+            },
+            nlp: {
+                title: "Natural Language Processing (NLP)",
+                text: "This branch of AI gives computers the ability to understand, interpret, and generate human language. Chatbots, language translation apps (like Google Translate), and sentiment analysis tools all rely on NLP."
+            },
+            cv: {
+                title: "Computer Vision",
+                text: "Computer Vision enables machines to 'see' and interpret the visual world. This includes tasks like facial recognition on your phone, identifying objects in images, and powering medical imaging analysis."
+            }
+        };
+
+        function showAiExplanation(aiType) {
+            const box = document.getElementById('ai-explanation-box');
+            const title = document.getElementById('ai-explanation-title');
+            const text = document.getElementById('ai-explanation-text');
+
+            title.textContent = aiExplanations[aiType].title;
+            text.textContent = aiExplanations[aiType].text;
+            box.classList.remove('hidden');
+        }
+
+        // --- Levels of AI Section Logic (Pyramid) ---
+        const levelExplanations = {
+            l6: { title: "AGI & LLM OS", text: "The pinnacle of the pyramid. This represents Artificial General Intelligence (AGI) or an LLM that acts as a full-fledged operating system. It could manage complex resources, orchestrate multiple AI agents, and possess a deep, general understanding akin to human intelligence." },
+            l5: { title: "AI Agents", text: "These are autonomous systems that can do more than just respond. They can set goals, make plans, and use various tools (like browsing the web or running code) to accomplish complex, multi-step tasks without constant human intervention." },
+            l4: { title: "RAG Systems", text: "A powerful combination. These systems first retrieve relevant information from a vast, external knowledge base and then use that information to generate a comprehensive, accurate, and context-rich answer. This overcomes the knowledge limitations of a standard model." },
+            l3: { title: "NLP Tasks", text: "This level involves more complex language understanding and generation, such as summarizing long documents, translating languages, and analyzing sentiment. The focus is on specific, sophisticated language-based tasks." },
+            l2: { title: "Chatbots", text: "The next step up. Chatbots can maintain a conversation, remember context within the chat, and provide more interactive, human-like responses than simple Q&A systems." },
+            l1: { title: "Q&A Foundation", text: "The base layer. These systems are designed to answer specific questions based on a pre-existing knowledge base. They find the best answer but don't generate new content. Think of simple FAQ bots." }
+        };
+        
+        function setupPyramid() {
+            const container = document.getElementById('pyramid-container');
+            container.innerHTML = '';
+            const levels = Object.keys(levelExplanations);
+            const widths = ['w-1/2', 'w-7/12', 'w-8/12', 'w-10/12', 'w-11/12', 'w-full'];
+
+            levels.forEach((key, index) => {
+                const levelDiv = document.createElement('div');
+                levelDiv.id = `level-node-${key}`;
+                levelDiv.className = `pyramid-level p-3 rounded-md text-center font-semibold mx-auto ${widths[index]}`;
+                levelDiv.textContent = levelExplanations[key].title;
+                levelDiv.setAttribute('onclick', `showLevelExplanation('${key}')`);
+                container.appendChild(levelDiv);
+            });
+        }
+
+        function showLevelExplanation(levelKey) {
+            const box = document.getElementById('level-explanation-box');
+            const title = document.getElementById('level-explanation-title');
+            const text = document.getElementById('level-explanation-text');
+
+            title.textContent = levelExplanations[levelKey].title;
+            text.textContent = levelExplanations[levelKey].text;
+            
+            document.querySelectorAll('.pyramid-level').forEach(node => {
+                node.classList.remove('active');
+            });
+            document.getElementById(`level-node-${levelKey}`).classList.add('active');
+        }
+
+        // --- Neural Network Section Logic ---
+        const nnSVG = document.getElementById('nn-svg');
+        const nnStatus = document.getElementById('nn-status');
+        const nnOutput = document.getElementById('nn-output');
+        const inputToggles = [document.getElementById('input-0'), document.getElementById('input-1')];
+        let nnState = {
+            trained: false,
+            inputs: [0, 0]
+        };
+
+        function toggleInput(index) {
+            nnState.inputs[index] = nnState.inputs[index] === 0 ? 1 : 0;
+            const toggle = inputToggles[index];
+            const handle = toggle.querySelector('div');
+            toggle.classList.toggle('active');
+            handle.style.transform = nnState.inputs[index] === 1 ? 'translateX(2rem)' : 'translateX(0)';
+        }
+
+        function drawNetwork() {
+            nnSVG.innerHTML = ''; // Clear previous drawing
+            const layers = [2, 3, 1];
+            const layerX = [50, 150, 250];
+
+            // Draw connections
+            for (let i = 0; i < layers.length - 1; i++) {
+                for (let j = 0; j < layers[i]; j++) {
+                    for (let k = 0; k < layers[i+1]; k++) {
+                        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                        line.id = `conn-${i}${j}-${i+1}${k}`;
+                        line.setAttribute('x1', layerX[i]);
+                        line.setAttribute('y1', (nnSVG.height.baseVal.value / (layers[i] + 1)) * (j + 1));
+                        line.setAttribute('x2', layerX[i+1]);
+                        line.setAttribute('y2', (nnSVG.height.baseVal.value / (layers[i+1] + 1)) * (k + 1));
+                        line.setAttribute('stroke', '#4A5568');
+                        line.setAttribute('stroke-width', '1.5');
+                        line.classList.add('connection');
+                        nnSVG.appendChild(line);
+                    }
+                }
+            }
+
+            // Draw neurons
+            layers.forEach((numNeurons, i) => {
+                for (let j = 0; j < numNeurons; j++) {
+                    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                    circle.id = `neuron-${i}-${j}`;
+                    circle.setAttribute('cx', layerX[i]);
+                    circle.setAttribute('cy', (nnSVG.height.baseVal.value / (numNeurons + 1)) * (j + 1));
+                    circle.setAttribute('r', 15);
+                    circle.setAttribute('fill', '#2D3748');
+                    circle.setAttribute('stroke', '#4A5568');
+                    circle.setAttribute('stroke-width', '2');
+                    circle.classList.add('neuron');
+                    nnSVG.appendChild(circle);
+                }
+            });
+        }
+
+        function clearAnimations() {
+            document.querySelectorAll('.neuron, .connection').forEach(el => el.classList.remove('active'));
+            nnOutput.textContent = '?';
+            nnOutput.style.borderColor = '#4B5563';
+        }
+        
+        function predict() {
+            clearAnimations();
+            let delay = 0;
+
+            // Animate input neurons
+            nnState.inputs.forEach((val, i) => {
+                if (val === 1) {
+                    setTimeout(() => document.getElementById(`neuron-0-${i}`).classList.add('active'), delay);
+                }
+            });
+            delay += 250;
+
+            // Animate first layer of connections
+            setTimeout(() => {
+                for(let i=0; i<2; i++) {
+                    if (nnState.inputs[i] === 1) {
+                        for(let j=0; j<3; j++) document.getElementById(`conn-0${i}-1${j}`).classList.add('active');
+                    }
+                }
+            }, delay);
+            delay += 250;
+            
+            // Animate hidden layer
+            setTimeout(() => {
+                for(let i=0; i<3; i++) document.getElementById(`neuron-1-${i}`).classList.add('active');
+            }, delay);
+            delay += 250;
+
+            // Animate second layer of connections
+            setTimeout(() => {
+                for(let i=0; i<3; i++) document.getElementById(`conn-1${i}-20`).classList.add('active');
+            }, delay);
+            delay += 250;
+
+            // Animate output
+            setTimeout(() => {
+                const outputNeuron = document.getElementById('neuron-2-0');
+                const result = nnState.inputs[0] ^ nnState.inputs[1]; // XOR logic
+                
+                if (nnState.trained) {
+                    outputNeuron.classList.add('active');
+                    nnOutput.textContent = result;
+                    nnOutput.style.borderColor = '#60A5FA';
+                    nnStatus.textContent = `Prediction: ${result}. The network is trained!`;
+                } else {
+                    const incorrectResult = Math.random() > 0.5 ? 1 : 0;
+                    if (incorrectResult === 1) outputNeuron.classList.add('active');
+                    nnOutput.textContent = incorrectResult;
+                    nnOutput.style.borderColor = '#F87171'; // Red for untrained
+                    nnStatus.textContent = `Prediction: ${incorrectResult}. The network is untrained and might be wrong.`;
+                }
+            }, delay);
+        }
+
+        function trainNetwork() {
+            nnStatus.textContent = 'Status: Training... this will take a moment.';
+            nnStatus.style.color = '#FBBF24';
+            clearAnimations();
+            
+            let trainingDelay = 0;
+            const connections = document.querySelectorAll('.connection');
+            
+            // Simulate training iterations
+            for (let i=0; i < 3; i++) {
+                setTimeout(() => {
+                    connections.forEach(c => {
+                        c.style.stroke = `hsl(${Math.random() * 360}, 70%, 50%)`;
+                        c.style.strokeWidth = `${Math.random() * 2 + 1}`;
+                    });
+                }, trainingDelay);
+                trainingDelay += 300;
+            }
+            
+            setTimeout(() => {
+                connections.forEach(c => {
+                    c.style.stroke = '#4A5568';
+                    c.style.strokeWidth = '1.5';
+                });
+                nnState.trained = true;
+                nnStatus.textContent = 'Status: Trained! Try making a prediction now.';
+                nnStatus.style.color = '#34D399';
+            }, trainingDelay);
+        }
+
+        function resetNetwork() {
+            nnState.trained = false;
+            nnState.inputs = [0, 0];
+            inputToggles.forEach(toggle => {
+                toggle.classList.remove('active');
+                toggle.querySelector('div').style.transform = 'translateX(0)';
+            });
+            drawNetwork();
+            clearAnimations();
+            nnStatus.textContent = 'Status: Untrained';
+            nnStatus.style.color = '#F3F4F6';
+        }
+
+        // --- Initial setup ---
+        window.onload = () => {
+            showTab('what-is-ai');
+            setupPyramid();
+            showLevelExplanation('l6'); // Show top level by default
+            resetNetwork();
+        };
+    </script>
+</body>
+</html>
