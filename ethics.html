@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Ethics: An Interactive Learning Tool</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+
+        :root {
+            --primary-start: #6a11cb;
+            --primary-end: #2575fc;
+            --background: #f7f9fc;
+            --card-bg: #ffffff;
+            --text-primary: #2d3748;
+            --text-secondary: #718096;
+            --success: #28a745;
+            --error: #dc3545;
+            --border-light: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        #app-container {
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 900px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        header {
+            background: linear-gradient(90deg, var(--primary-start), var(--primary-end));
+            color: #fff;
+            padding: 2rem 1.5rem;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.25em;
+            font-weight: 700;
+        }
+
+        main {
+            padding: 2.5rem;
+        }
+
+        /* Learning Section Styles */
+        #learning-container h2 {
+            color: var(--text-primary);
+            font-size: 1.8em;
+            border-bottom: 3px solid var(--border-light);
+            padding-bottom: 0.75rem;
+            margin: 0 0 2rem 0;
+        }
+
+        .learning-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .learning-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+        
+        .learning-item .icon {
+            flex-shrink: 0;
+            width: 48px;
+            height: 48px;
+            display: grid;
+            place-items: center;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary-start) 0%, var(--primary-end) 100%);
+            color: white;
+        }
+
+        .learning-item .icon svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .learning-item h3 {
+            color: var(--text-primary);
+            font-size: 1.25em;
+            margin: 0 0 0.5rem 0;
+        }
+
+        .learning-item p {
+            font-size: 1em;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        /* Assessment Section Styles */
+        #assessment-container {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        #progress-bar-container {
+            width: 100%;
+            background-color: var(--border-light);
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+
+        #progress-bar {
+            width: 0%;
+            height: 10px;
+            background: linear-gradient(90deg, var(--primary-start), var(--primary-end));
+            border-radius: 10px;
+            transition: width 0.5s ease-in-out;
+        }
+
+        #scenario-text {
+            font-size: 1.25em;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            font-weight: 500;
+        }
+
+        #choices-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        .choice-btn {
+            background-color: var(--card-bg);
+            border: 2px solid var(--border-light);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .choice-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border-color: var(--primary-end);
+        }
+        
+        .choice-btn.correct {
+            background-color: #e9f7ef;
+            border-color: var(--success);
+            color: var(--success);
+            font-weight: 500;
+        }
+
+        .choice-btn.incorrect {
+            background-color: #fdeeee;
+            border-color: var(--error);
+            color: var(--error);
+            font-weight: 500;
+        }
+
+        #feedback-container {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            border-radius: 12px;
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        
+        .choice-btn.correct + #feedback-container, .choice-btn.incorrect + #feedback-container {
+            display: block;
+        }
+        
+        #feedback-container {
+            background-color: #f7f9fc;
+        }
+
+        #feedback-text {
+            font-size: 1.05em;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* General Button Styles */
+        .action-btn {
+            background: linear-gradient(90deg, var(--primary-start), var(--primary-end));
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            padding: 1rem 2rem;
+            font-size: 1.1em;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-block;
+            margin: 2.5rem auto 0;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(37, 117, 252, 0.4);
+        }
+
+        #score-container {
+            text-align: right;
+            font-size: 1.1em;
+            color: var(--text-secondary);
+            margin-top: 1.5rem;
+        }
+        
+        #final-score-container {
+            text-align: center;
+            animation: fadeIn 0.5s;
+        }
+
+        #final-score-container h2 {
+            font-size: 2.5em;
+            color: var(--primary-start);
+            margin-bottom: 1rem;
+        }
+        
+        #final-score-container p {
+            font-size: 1.2em;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+        
+        .final-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="app-container">
+        <header>
+            <h1>AI Ethics: An Interactive Learning Tool</h1>
+        </header>
+        <main>
+            <!-- Learning Section -->
+            <div id="learning-container">
+                <h2>Part 1: Understanding the Ethical Challenges of AI</h2>
+                <div class="learning-grid">
+                    <div class="learning-item">
+                        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/></svg></div>
+                        <div><h3>1. Algorithmic Bias and Fairness</h3><p>AI can amplify societal biases found in data, leading to unfair outcomes in areas like hiring and justice.</p></div>
+                    </div>
+                    <div class="learning-item">
+                        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg></div>
+                        <div><h3>2. Privacy and Surveillance</h3><p>AI's need for vast data raises concerns about how personal information is collected, used, and protected from misuse.</p></div>
+                    </div>
+                    <div class="learning-item">
+                        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+                        <div><h3>3. Accountability and the "Black Box" Problem</h3><p>The complexity of some AI models makes their decisions hard to explain, creating challenges for accountability when errors occur.</p></div>
+                    </div>
+                    <div class="learning-item">
+                        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg></div>
+                        <div><h3>4. Job Displacement and Economic Impact</h3><p>AI automation raises concerns about job loss and economic inequality, requiring strategies for a fair societal transition.</p></div>
+                    </div>
+                    <div class="learning-item">
+                        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg></div>
+                        <div><h3>5. Autonomous Systems and Decision-Making</h3><p>AI in systems like self-driving cars forces us to confront difficult dilemmas, such as how they should act in no-win scenarios.</p></div>
+                    </div>
+                    <div class="learning-item">
+                        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></div>
+                        <div><h3>6. Intellectual Property and Creativity</h3><p>Generative AI challenges our ideas of authorship and copyright, creating new legal and ethical questions about originality.</p></div>
+                    </div>
+                </div>
+
+                <div style="text-align: center;">
+                    <button id="start-assessment-btn" class="action-btn">Start Assessment</button>
+                </div>
+            </div>
+
+            <!-- Assessment Section (Initially Hidden) -->
+            <div id="assessment-container" style="display: none;">
+                <div id="progress-bar-container">
+                    <div id="progress-bar"></div>
+                </div>
+                <div id="scenario-container">
+                    <p id="scenario-text"></p>
+                    <div id="choices-container"></div>
+                </div>
+                <div id="feedback-container">
+                    <p id="feedback-text"></p>
+                </div>
+                <div id="score-container">
+                    <p>Score: <span id="score">0</span></p>
+                </div>
+                <div style="text-align: center;">
+                    <button id="next-btn" class="action-btn" style="display: none;">Next Scenario</button>
+                </div>
+                <div id="final-score-container" style="display: none;">
+                    <h2>Congratulations!</h2>
+                    <p>You've completed the AI Ethics Challenge.</p>
+                    <p>Your final score is: <span id="final-score"></span></p>
+                    <div class="final-buttons">
+                        <button id="restart-btn" class="action-btn">Try Again</button>
+                        <button id="back-to-learning-btn" class="action-btn">Review Learning Material</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const scenarios = [
+            {
+                scenario: "A large tech company has developed an AI-powered recruitment tool that analyzes resumes and predicts job performance. The tool significantly speeds up the hiring process. However, an internal audit reveals the AI is consistently ranking female candidates lower for technical roles, likely because it was trained on historical data from a male-dominated industry. What should the company do?",
+                choices: [
+                    { text: "Continue using the tool to save time and money, but manually review the applications of female candidates who are rejected.", isCorrect: false, explanation: "While manual review is a step in the right direction, it doesn't address the root cause of the bias in the AI. The tool will continue to perpetuate unfairness, and this approach may not be scalable or consistently applied." },
+                    { text: "Stop using the tool immediately and revert to the old, slower manual screening process until the bias can be completely eliminated.", isCorrect: true, explanation: "This is the most ethical choice. It prioritizes fairness and non-discrimination over efficiency. The company should halt the use of a biased tool and invest in fixing the algorithm and diversifying the training data before redeploying it." },
+                    { text: "Adjust the AI's algorithm to give a 'bonus' score to female candidates to counteract the bias.", isCorrect: false, explanation: "This approach, while well-intentioned, can be seen as a form of reverse discrimination and may not be legally or ethically sound. It also doesn't fix the underlying problem of a biased model and could have unintended consequences." }
+                ]
+            },
+            {
+                scenario: "A self-driving car is in a situation where it must choose between hitting a group of pedestrians or swerving and crashing, which would harm its passenger. How should the car be programmed to react?",
+                choices: [
+                    { text: "Prioritize the safety of the passenger at all costs.", isCorrect: false, explanation: "This utilitarian approach raises ethical questions about the value of one life versus many. It could also discourage people from buying self-driving cars if they are programmed to sacrifice their owners." },
+                    { text: "Prioritize the safety of the greatest number of people, even if it means sacrificing the passenger.", isCorrect: false, explanation: "This is a classic utilitarian dilemma. While it seems logical to save more lives, it creates a difficult ethical situation where the car is programmed to potentially harm its owner. There is no universally agreed-upon 'correct' answer, highlighting the complexity of programming ethics into machines." },
+                    { text: "The car's programming in such an edge case is a complex ethical problem with no single right answer, requiring public debate and regulation.", isCorrect: true, explanation: "This is the most nuanced and accurate answer. The 'trolley problem' for autonomous vehicles is a profound ethical challenge with no easy solution. It requires a broader societal conversation involving ethicists, policymakers, and the public to establish a framework for these life-and-death decisions." }
+                ]
+            },
+            {
+                scenario: "An artist uses a generative AI to create a series of stunning images for a gallery exhibition. The AI was trained on a massive dataset of images from the internet, including copyrighted works. The artist wins a prestigious award for their 'original' creations. Is this ethical?",
+                choices: [
+                    { text: "Yes, the artist used the AI as a tool, and their creative prompts and curation are a form of artistry.", isCorrect: false, explanation: "While the artist's input is a creative act, the AI's output is directly derived from the work of other artists, many of whom did not consent to their work being used for training. This raises significant questions about copyright and fair use." },
+                    { text: "No, the AI-generated images are a form of plagiarism, as they are based on the work of other artists without permission or credit.", isCorrect: false, explanation: "While it's not traditional plagiarism, it does raise serious ethical concerns about intellectual property. The AI is essentially remixing existing art without attribution, which undermines the value of the original creators' work." },
+                    { text: "It's a gray area. The use of generative AI in art challenges our traditional notions of authorship and copyright, and the legal and ethical frameworks are still evolving.", isCorrect: true, explanation: "This is the most accurate answer. The rise of generative AI has created new and complex ethical and legal challenges for the art world. There is ongoing debate about how to handle issues of copyright, originality, and fair compensation for artists whose work is used in training data." }
+                ]
+            },
+            {
+                scenario: "A social media company uses a sophisticated AI to track user behavior, not just on their platform but across the entire internet. They use this data to create incredibly detailed user profiles and sell highly targeted advertising. Is this a justifiable business practice?",
+                choices: [
+                    { text: "Yes, users agree to the terms of service, and the personalized ads are a fair trade for a free service.", isCorrect: false, explanation: "Many users are not fully aware of the extent of data collection, and the 'consent' given in long, complex terms of service is often not meaningful. The potential for manipulation and privacy invasion is significant." },
+                    { text: "No, this level of tracking is a serious invasion of privacy, and the data could be used to manipulate users or be exposed in a data breach.", isCorrect: true, explanation: "This is the most ethically sound position. Extensive, non-transparent tracking of users' online activity is a major privacy concern. It creates a power imbalance between the company and the user and can lead to manipulative practices and security risks." },
+                    { text: "It's acceptable as long as the company is transparent about the data they collect and gives users some control over their ad preferences.", isCorrect: false, explanation: "While transparency and user control are important, they often don't go far enough. The sheer volume of data collected can be difficult for users to comprehend, and the 'control' offered may be limited. The fundamental issue of mass data collection for profit remains." }
+                ]
+            }
+        ];
+
+        let currentScenarioIndex = 0;
+        let score = 0;
+
+        // Get elements
+        const learningContainerEl = document.getElementById('learning-container');
+        const assessmentContainerEl = document.getElementById('assessment-container');
+        const startAssessmentBtn = document.getElementById('start-assessment-btn');
+        const progressBar = document.getElementById('progress-bar');
+        
+        const scenarioTextEl = document.getElementById('scenario-text');
+        const choicesContainerEl = document.getElementById('choices-container');
+        const feedbackContainerEl = document.getElementById('feedback-container');
+        const feedbackTextEl = document.getElementById('feedback-text');
+        const nextBtn = document.getElementById('next-btn');
+        const restartBtn = document.getElementById('restart-btn');
+        const backToLearningBtn = document.getElementById('back-to-learning-btn');
+        const scoreEl = document.getElementById('score');
+        const finalScoreContainerEl = document.getElementById('final-score-container');
+        const finalScoreEl = document.getElementById('final-score');
+        const scenarioContainerEl = document.getElementById('scenario-container');
+        const scoreContainerEl = document.getElementById('score-container');
+
+        // Event Listeners
+        startAssessmentBtn.addEventListener('click', startAssessment);
+        nextBtn.addEventListener('click', nextScenario);
+        restartBtn.addEventListener('click', restartGame);
+        backToLearningBtn.addEventListener('click', backToLearning);
+
+        // Functions
+        function startAssessment() {
+            learningContainerEl.style.display = 'none';
+            assessmentContainerEl.style.display = 'block';
+            resetQuizState();
+            loadScenario();
+        }
+        
+        function backToLearning() {
+            finalScoreContainerEl.style.display = 'none';
+            assessmentContainerEl.style.display = 'none';
+            learningContainerEl.style.display = 'block';
+        }
+        
+        function updateProgressBar() {
+            const progress = ((currentScenarioIndex + 1) / scenarios.length) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        function loadScenario() {
+            updateProgressBar();
+            const currentScenario = scenarios[currentScenarioIndex];
+            scenarioTextEl.textContent = currentScenario.scenario;
+            choicesContainerEl.innerHTML = '';
+            currentScenario.choices.forEach(choice => {
+                const button = document.createElement('button');
+                button.innerHTML = `<span>${choice.text}</span>`;
+                button.classList.add('choice-btn');
+                button.onclick = () => selectChoice(choice, button);
+                choicesContainerEl.appendChild(button);
+            });
+        }
+
+        function selectChoice(choice, button) {
+            const isCorrect = choice.isCorrect;
+            if (isCorrect) {
+                score++;
+                scoreEl.textContent = score;
+                button.classList.add('correct');
+            } else {
+                button.classList.add('incorrect');
+            }
+
+            feedbackTextEl.textContent = choice.explanation;
+            feedbackContainerEl.style.display = 'block';
+
+            Array.from(choicesContainerEl.children).forEach(btn => {
+                btn.disabled = true;
+            });
+
+            nextBtn.style.display = 'inline-block';
+        }
+
+        function nextScenario() {
+            currentScenarioIndex++;
+            if (currentScenarioIndex < scenarios.length) {
+                loadScenario();
+                feedbackContainerEl.style.display = 'none';
+                nextBtn.style.display = 'none';
+            } else {
+                showFinalScore();
+            }
+        }
+        
+        function showFinalScore() {
+            scenarioContainerEl.style.display = 'none';
+            feedbackContainerEl.style.display = 'none';
+            nextBtn.style.display = 'none';
+            scoreContainerEl.style.display = 'none';
+            document.getElementById('progress-bar-container').style.display = 'none';
+            finalScoreContainerEl.style.display = 'block';
+            finalScoreEl.textContent = `${score} out of ${scenarios.length}`;
+        }
+        
+        function resetQuizState() {
+            currentScenarioIndex = 0;
+            score = 0;
+            scoreEl.textContent = score;
+            finalScoreContainerEl.style.display = 'none';
+            scenarioContainerEl.style.display = 'block';
+            scoreContainerEl.style.display = 'block';
+            feedbackContainerEl.style.display = 'none';
+            nextBtn.style.display = 'none';
+            document.getElementById('progress-bar-container').style.display = 'block';
+            progressBar.style.width = '0%';
+        }
+
+        function restartGame() {
+            resetQuizState();
+            loadScenario();
+        }
+    </script>
+
+</body>
+</html>
