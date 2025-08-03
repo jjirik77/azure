@@ -5,23 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Ethics: An Interactive Learning Tool</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&display=swap');
 
         :root {
-            --primary-start: #6a11cb;
-            --primary-end: #2575fc;
-            --background: #f7f9fc;
-            --card-bg: #ffffff;
-            --text-primary: #2d3748;
-            --text-secondary: #718096;
+            --dark-navy-bg: #0a101f;
+            --surface-color: #10192b;
+            --accent-glow: #00bfff;
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --border-color: #2d3748;
             --success: #28a745;
             --error: #dc3545;
-            --border-light: #e2e8f0;
+            --shadow-color: rgba(0, 191, 255, 0.1);
+            --shadow-color-hover: rgba(0, 191, 255, 0.3);
+            --transition-fast: all 0.3s ease-in-out;
         }
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--background);
+            background-color: var(--dark-navy-bg);
+            background-image: radial-gradient(circle at top, #10192b, var(--dark-navy-bg));
             color: var(--text-primary);
             margin: 0;
             padding: 2rem;
@@ -29,77 +33,133 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background-image: url('https://www.transparenttextures.com/patterns/subtle-noise.png');
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: -1;
         }
 
         #app-container {
-            background-color: var(--card-bg);
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
             border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
             width: 100%;
             max-width: 900px;
             overflow: hidden;
-            transition: all 0.3s ease;
+            transition: var(--transition-fast);
         }
 
         header {
-            background: linear-gradient(90deg, var(--primary-start), var(--primary-end));
+            background: linear-gradient(180deg, var(--surface-color), #0a101fcc);
             color: #fff;
             padding: 2rem 1.5rem;
             text-align: center;
+            position: relative;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header-glow {
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 400px; height: 200px;
+            background: var(--accent-glow);
+            border-radius: 50%;
+            filter: blur(100px);
+            transform: translate(-50%, -50%);
+            opacity: 0.1;
+            animation: pulseGlow 8s infinite alternate;
+            z-index: 0;
+        }
+
+        @keyframes pulseGlow {
+            from { opacity: 0.05; transform: translate(-50%, -50%) scale(0.8); }
+            to { opacity: 0.15; transform: translate(-50%, -50%) scale(1.2); }
         }
 
         header h1 {
+            font-family: 'Poppins', sans-serif;
             margin: 0;
             font-size: 2.25em;
             font-weight: 700;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 0 15px rgba(0, 191, 255, 0.2);
         }
 
         main {
             padding: 2.5rem;
         }
 
-        /* Learning Section Styles */
-        #learning-container h2 {
+        .section-header {
+            border-left: 6px solid var(--accent-glow);
+            padding-left: 1.25rem;
+            font-size: 2rem;
+            font-family: 'Poppins', sans-serif;
+            letter-spacing: 0.5px;
             color: var(--text-primary);
-            font-size: 1.8em;
-            border-bottom: 3px solid var(--border-light);
-            padding-bottom: 0.75rem;
             margin: 0 0 2rem 0;
         }
 
+        /* Learning Section Styles */
         .learning-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
+            gap: 1.5rem;
             margin-bottom: 2.5rem;
         }
 
         .learning-item {
+            background: rgba(10, 16, 31, 0.5);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
             display: flex;
-            align-items: flex-start;
+            flex-direction: column;
+            gap: 1rem;
+            transition: var(--transition-fast);
+            cursor: pointer;
+        }
+
+        .learning-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4), 0 0 25px var(--shadow-color-hover);
+            border-color: var(--accent-glow);
+        }
+
+        .learning-item-header {
+            display: flex;
+            align-items: center;
             gap: 1rem;
         }
-        
+
         .learning-item .icon {
             flex-shrink: 0;
-            width: 48px;
-            height: 48px;
+            width: 48px; height: 48px;
             display: grid;
             place-items: center;
             border-radius: 12px;
-            background: linear-gradient(135deg, var(--primary-start) 0%, var(--primary-end) 100%);
+            background: linear-gradient(135deg, var(--accent-glow) 0%, #2575fc 100%);
             color: white;
         }
 
         .learning-item .icon svg {
-            width: 24px;
-            height: 24px;
+            width: 24px; height: 24px;
         }
 
         .learning-item h3 {
             color: var(--text-primary);
             font-size: 1.25em;
-            margin: 0 0 0.5rem 0;
+            margin: 0;
+            font-weight: 600;
         }
 
         .learning-item p {
@@ -107,25 +167,42 @@
             line-height: 1.6;
             color: var(--text-secondary);
             margin: 0;
+            display: none; /* Hidden by default */
+        }
+
+        .learning-item.active p {
+            display: block;
+            animation: enhancedFadeIn 0.5s ease-in-out;
+        }
+        
+        .learning-item.active {
+             border-color: var(--accent-glow);
+             box-shadow: 0 0 25px var(--shadow-color-hover);
+             background-color: rgba(0, 191, 255, 0.05);
         }
 
         /* Assessment Section Styles */
         #assessment-container {
-            animation: fadeIn 0.5s ease-in-out;
+            animation: enhancedFadeIn 0.7s ease-out;
+        }
+        
+        @keyframes enhancedFadeIn {
+            from { opacity: 0; transform: translateY(25px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         #progress-bar-container {
             width: 100%;
-            background-color: var(--border-light);
+            background-color: var(--dark-navy-bg);
             border-radius: 10px;
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
             overflow: hidden;
+            border: 1px solid var(--border-color);
         }
 
         #progress-bar {
-            width: 0%;
-            height: 10px;
-            background: linear-gradient(90deg, var(--primary-start), var(--primary-end));
+            width: 0%; height: 10px;
+            background: linear-gradient(90deg, var(--accent-glow), #2575fc);
             border-radius: 10px;
             transition: width 0.5s ease-in-out;
         }
@@ -135,6 +212,7 @@
             line-height: 1.6;
             margin-bottom: 2rem;
             font-weight: 500;
+            color: var(--text-primary);
         }
 
         #choices-container {
@@ -144,37 +222,36 @@
         }
 
         .choice-btn {
-            background-color: var(--card-bg);
-            border: 2px solid var(--border-light);
+            background-color: var(--dark-navy-bg);
+            border: 2px solid var(--border-color);
             border-radius: 12px;
             padding: 1rem 1.5rem;
             font-size: 1em;
+            color: var(--text-secondary);
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: var(--transition-fast);
             text-align: left;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
         }
 
         .choice-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            border-color: var(--primary-end);
+            border-color: var(--accent-glow);
+            color: var(--text-primary);
+            background-color: rgba(0, 191, 255, 0.05);
         }
         
         .choice-btn.correct {
-            background-color: #e9f7ef;
             border-color: var(--success);
             color: var(--success);
-            font-weight: 500;
+            font-weight: 600;
+            background-color: rgba(40, 167, 69, 0.1);
         }
 
         .choice-btn.incorrect {
-            background-color: #fdeeee;
             border-color: var(--error);
             color: var(--error);
-            font-weight: 500;
+            font-weight: 600;
+            background-color: rgba(220, 53, 69, 0.1);
         }
 
         #feedback-container {
@@ -182,42 +259,37 @@
             padding: 1.5rem;
             border-radius: 12px;
             display: none;
-            animation: fadeIn 0.5s;
+            animation: enhancedFadeIn 0.5s;
+            background-color: var(--dark-navy-bg);
+            border: 1px solid var(--border-color);
         }
         
-        .choice-btn.correct + #feedback-container, .choice-btn.incorrect + #feedback-container {
-            display: block;
-        }
-        
-        #feedback-container {
-            background-color: #f7f9fc;
-        }
-
         #feedback-text {
             font-size: 1.05em;
             line-height: 1.6;
             margin: 0;
+            color: var(--text-secondary);
         }
 
         /* General Button Styles */
         .action-btn {
-            background: linear-gradient(90deg, var(--primary-start), var(--primary-end));
-            color: #fff;
+            background: var(--accent-glow);
+            color: var(--dark-navy-bg);
             border: none;
             border-radius: 12px;
             padding: 1rem 2rem;
             font-size: 1.1em;
-            font-weight: 500;
+            font-weight: 700;
             cursor: pointer;
             display: inline-block;
             margin: 2.5rem auto 0;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: var(--transition-fast);
+            box-shadow: 0 0 20px var(--shadow-color);
         }
 
         .action-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 7px 20px rgba(37, 117, 252, 0.4);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 7px 30px var(--shadow-color-hover);
         }
 
         #score-container {
@@ -229,12 +301,14 @@
         
         #final-score-container {
             text-align: center;
-            animation: fadeIn 0.5s;
+            animation: enhancedFadeIn 0.5s;
         }
 
         #final-score-container h2 {
             font-size: 2.5em;
-            color: var(--primary-start);
+            font-family: 'Poppins', sans-serif;
+            color: var(--accent-glow);
+            text-shadow: 0 0 15px var(--accent-glow);
             margin-bottom: 1rem;
         }
         
@@ -248,49 +322,105 @@
             display: flex;
             justify-content: center;
             gap: 1rem;
+            flex-wrap: wrap;
         }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
     </style>
 </head>
 <body>
 
     <div id="app-container">
         <header>
+            <div class="header-glow"></div>
             <h1>AI Ethics: An Interactive Learning Tool</h1>
         </header>
         <main>
             <!-- Learning Section -->
             <div id="learning-container">
-                <h2>Part 1: Understanding the Ethical Challenges of AI</h2>
+                <h2 class="section-header">Understanding the Ethical Challenges of AI</h2>
                 <div class="learning-grid">
                     <div class="learning-item">
-                        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/></svg></div>
-                        <div><h3>1. Algorithmic Bias and Fairness</h3><p>AI can amplify societal biases found in data, leading to unfair outcomes in areas like hiring and justice.</p></div>
+                        <div class="learning-item-header">
+                            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/></svg></div>
+                            <h3>1. Algorithmic Bias & Fairness</h3>
+                        </div>
+                        <p>AI can amplify societal biases found in data, leading to unfair outcomes in areas like hiring and justice.</p>
                     </div>
                     <div class="learning-item">
-                        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg></div>
-                        <div><h3>2. Privacy and Surveillance</h3><p>AI's need for vast data raises concerns about how personal information is collected, used, and protected from misuse.</p></div>
+                        <div class="learning-item-header">
+                            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg></div>
+                            <h3>2. Privacy & Surveillance</h3>
+                        </div>
+                        <p>AI's need for vast data raises concerns about how personal information is collected, used, and protected from misuse.</p>
                     </div>
                     <div class="learning-item">
-                        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
-                        <div><h3>3. Accountability and the "Black Box" Problem</h3><p>The complexity of some AI models makes their decisions hard to explain, creating challenges for accountability when errors occur.</p></div>
+                        <div class="learning-item-header">
+                            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+                            <h3>3. Accountability & The "Black Box"</h3>
+                        </div>
+                        <p>The complexity of some AI models makes their decisions hard to explain, creating challenges for accountability when errors occur.</p>
                     </div>
                     <div class="learning-item">
-                        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg></div>
-                        <div><h3>4. Job Displacement and Economic Impact</h3><p>AI automation raises concerns about job loss and economic inequality, requiring strategies for a fair societal transition.</p></div>
+                        <div class="learning-item-header">
+                            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg></div>
+                            <h3>4. Job Displacement</h3>
+                        </div>
+                        <p>AI automation raises concerns about job loss and economic inequality, requiring strategies for a fair societal transition.</p>
                     </div>
                     <div class="learning-item">
-                        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg></div>
-                        <div><h3>5. Autonomous Systems and Decision-Making</h3><p>AI in systems like self-driving cars forces us to confront difficult dilemmas, such as how they should act in no-win scenarios.</p></div>
+                        <div class="learning-item-header">
+                            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg></div>
+                            <h3>5. Autonomous Systems</h3>
+                        </div>
+                        <p>AI in systems like self-driving cars forces us to confront difficult dilemmas, such as how they should act in no-win scenarios.</p>
                     </div>
                     <div class="learning-item">
-                        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></div>
-                        <div><h3>6. Intellectual Property and Creativity</h3><p>Generative AI challenges our ideas of authorship and copyright, creating new legal and ethical questions about originality.</p></div>
+                        <div class="learning-item-header">
+                            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></div>
+                            <h3>6. Intellectual Property</h3>
+                        </div>
+                        <p>Generative AI challenges our ideas of authorship and copyright, creating new legal and ethical questions about originality.</p>
+                    </div>
+                    <div class="learning-item">
+                        <div class="learning-item-header">
+                            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg></div>
+                            <h3>7. Environmental Impact</h3>
+                        </div>
+                        <p>Training large AI models consumes immense electricity and water, creating a significant, often hidden, environmental footprint.</p>
+                    </div>
+                    <div class="learning-item">
+                        <div class="learning-item-header">
+                            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 16.663c.527-.527.92-1.142 1.177-1.823A5.002 5.002 0 0012 15a5 5 0 100-10 5 5 0 00-1.16 9.84c.68.257 1.3.65 1.823 1.177A6.5 6.5 0 0112 19.5a6.5 6.5 0 01-2.337-12.837z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 12a3 3 0 100-6 3 3 0 000 6z" /></svg></div>
+                            <h3>8. Critical Thinking Erosion</h3>
+                        </div>
+                        <p>Over-reliance on AI for answers can weaken our ability to think critically, solve problems, and learn deeply.</p>
+                    </div>
+                    <div class="learning-item">
+                        <div class="learning-item-header">
+                            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg></div>
+                            <h3>9. Misinformation & Deepfakes</h3>
+                        </div>
+                        <p>AI-generated "deepfakes" can create hyper-realistic false content, eroding trust and enabling widespread deception.</p>
+                    </div>
+                    <div class="learning-item">
+                        <div class="learning-item-header">
+                            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.789-2.756 9.356-1.747 2.567-4.744 4.144-8.244 4.144H12v-14a1 1 0 011-1h9a1 1 0 011 1v14h-2.756c-3.5 0-6.497-1.577-8.244-4.144A12.933 12.933 0 0112 11z" /></svg></div>
+                            <h3>10. Amplified Cybercrime</h3>
+                        </div>
+                        <p>AI can be used to create sophisticated, scalable cyberattacks, such as adaptive malware and hyper-personalized phishing scams.</p>
+                    </div>
+                    <div class="learning-item">
+                        <div class="learning-item-header">
+                            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg></div>
+                            <h3>11. Emotional Dependency</h3>
+                        </div>
+                        <p>AI companions designed to be empathetic can lead to users forming unhealthy emotional bonds, potentially at the expense of real human relationships.</p>
+                    </div>
+                    <div class="learning-item">
+                        <div class="learning-item-header">
+                            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg></div>
+                            <h3>12. Attention & Focus</h3>
+                        </div>
+                        <p>AI-driven content algorithms, designed for maximum engagement, can shorten attention spans and make deep, focused work more difficult.</p>
                     </div>
                 </div>
 
@@ -363,6 +493,54 @@
                     { text: "No, this level of tracking is a serious invasion of privacy, and the data could be used to manipulate users or be exposed in a data breach.", isCorrect: true, explanation: "This is the most ethically sound position. Extensive, non-transparent tracking of users' online activity is a major privacy concern. It creates a power imbalance between the company and the user and can lead to manipulative practices and security risks." },
                     { text: "It's acceptable as long as the company is transparent about the data they collect and gives users some control over their ad preferences.", isCorrect: false, explanation: "While transparency and user control are important, they often don't go far enough. The sheer volume of data collected can be difficult for users to comprehend, and the 'control' offered may be limited. The fundamental issue of mass data collection for profit remains." }
                 ]
+            },
+            {
+                scenario: "A tech company is launching a new, powerful AI model. They have two options for their data centers: build them in a region with a coal-heavy power grid for lower costs, or build them in a region with abundant renewable energy (hydro, solar) at a higher cost. What is the most ethically responsible choice?",
+                choices: [
+                    { text: "Choose the lower-cost, coal-powered option to make the AI service more affordable and accessible to a wider audience.", isCorrect: false, explanation: "This prioritizes economic accessibility over environmental responsibility. While affordability is important, ignoring the significant carbon footprint of AI operations has long-term negative consequences for everyone, which is an ethical issue in itself." },
+                    { text: "Choose the renewable energy option, absorbing the higher cost to minimize the AI's environmental impact, and be transparent about it.", isCorrect: true, explanation: "This is the most ethically sound choice. It acknowledges the hidden environmental costs of AI and takes proactive steps to mitigate them. This aligns with principles of corporate social responsibility and sustainability." },
+                    { text: "Use the coal-powered option but purchase carbon credits to 'offset' the emissions, keeping costs low while claiming to be carbon neutral.", isCorrect: false, explanation: "Carbon offsetting is a controversial practice. While better than doing nothing, it doesn't reduce the actual emissions being pumped into the atmosphere. The most ethical approach is to avoid creating the emissions in the first place." }
+                ]
+            },
+            {
+                scenario: "A high school history teacher encourages students to use a generative AI to help write their essays. The goal is to improve their final submissions. What is the most ethical way to implement this?",
+                choices: [
+                    { text: "Allow students to use the AI to generate the entire essay and submit it as their own, as the final product is what matters.", isCorrect: false, explanation: "This approach completely undermines the purpose of the assignment, which is to develop the student's own research, writing, and critical thinking skills. It is a form of academic dishonesty." },
+                    { text: "Teach students to use the AI as a brainstorming partner or a tool to refine their own writing, requiring them to cite its use and submit their original drafts.", isCorrect: true, explanation: "This is the most responsible approach. It treats the AI as a tool to augment, not replace, human intellect. It fosters critical thinking by having students evaluate and build upon the AI's suggestions while maintaining academic integrity through citation." },
+                    { text: "Forbid the use of AI entirely, as it's impossible to know if students are using it ethically.", isCorrect: false, explanation: "While seemingly safe, this approach is unrealistic in the modern world. It misses a crucial opportunity to teach students how to use powerful new technologies responsibly, a skill they will need for the rest of their lives." }
+                ]
+            },
+            {
+                scenario: "A political campaign uses deepfake technology to create a video of their opponent supposedly making an offensive statement. The video is incredibly realistic and goes viral just before an election. What is the primary ethical failure here?",
+                choices: [
+                    { text: "The primary failure is the poor quality of the deepfake, as a better one would have been more effective.", isCorrect: false, explanation: "The technical quality of the deepfake is irrelevant to the ethical problem. The core issue is the act of deception itself, not how well it was executed." },
+                    { text: "The primary failure is the malicious use of AI to deceive the public and manipulate a democratic process.", isCorrect: true, explanation: "This is the core ethical violation. Using AI to fabricate 'evidence' and mislead voters is a direct attack on the principles of truth, trust, and informed consent that are essential for a functioning democracy." },
+                    { text: "There is no ethical failure; it's just an advanced form of political advertising, and voters should be smart enough to spot a fake.", isCorrect: false, explanation: "This argument wrongly places the entire burden of detection on the public. The sophistication of deepfakes can make them nearly impossible for the average person to spot, and the deliberate act of creating them to deceive is a profound ethical breach." }
+                ]
+            },
+            {
+                scenario: "A criminal organization uses an AI to analyze public social media data to identify wealthy individuals who are currently on vacation. The AI then crafts highly personalized phishing emails to their colleagues, requesting urgent wire transfers. Why is this AI-powered approach more dangerous than traditional phishing?",
+                choices: [
+                    { text: "It's not more dangerous; criminals have always used public information for scams.", isCorrect: false, explanation: "While true that criminals use public information, AI dramatically increases the scale, speed, and personalization of these attacks, making them far more effective and harder to detect than manual methods." },
+                    { text: "It's more dangerous because the AI can write emails without any spelling mistakes.", isCorrect: false, explanation: "While correct grammar is a factor, it's a minor part of the much larger threat. The core danger lies in the AI's ability to automate and personalize the entire attack chain." },
+                    { text: "It's more dangerous because AI automates the targeting and personalization of attacks at a massive scale, making them more convincing and efficient.", isCorrect: true, explanation: "This is the correct answer. The AI's ability to process vast amounts of data to identify perfect targets and then craft uniquely tailored, convincing messages is what makes this threat so potent. It combines scale with personalization in a way that was previously impossible." }
+                ]
+            },
+            {
+                scenario: "A company develops an AI companion app designed to combat loneliness. The AI is so effective that many users start spending more time with it than with their friends and family, leading to social withdrawal. What is the company's primary ethical obligation?",
+                choices: [
+                    { text: "To maximize the AI's human-like qualities to better fulfill the user's emotional needs, as this is the product's purpose.", isCorrect: false, explanation: "While well-intentioned, this could exacerbate the problem of unhealthy dependency. The ethical obligation is not just to create an effective product, but to consider its broader impact on user well-being." },
+                    { text: "To do nothing; users are responsible for managing their own social lives and relationships.", isCorrect: false, explanation: "This ignores the company's responsibility for the foreseeable consequences of its product. When a technology is designed to be highly engaging on a deep emotional level, its creator bears some ethical weight for potential negative outcomes." },
+                    { text: "To build in features that encourage users to maintain real-world connections and set usage limits, acknowledging the potential for unhealthy dependency.", isCorrect: true, explanation: "This is the most responsible choice. It balances the product's goal with a duty of care, implementing safeguards to mitigate known psychological risks and promote a healthy balance between digital and real-world interaction." }
+                ]
+            },
+            {
+                scenario: "A social media platform's new AI algorithm is incredibly successful at keeping users engaged for hours by showing a rapid-fire, endless stream of short videos. However, studies begin to show a correlation between heavy use of the app and a reduced ability to concentrate on long-form tasks like reading or studying. What should the platform do?",
+                choices: [
+                    { text: "Nothing. The platform's goal is to maximize engagement, and users are free to choose how they spend their time.", isCorrect: false, explanation: "This view sidesteps the ethical responsibility that comes with designing systems that directly manipulate human attention. The algorithm is not a neutral tool; it's designed to exploit cognitive biases for profit." },
+                    { text: "Acknowledge the issue and modify the algorithm to incorporate 'friction'—such as natural breaks or reminders—to promote healthier consumption patterns, even if it slightly lowers engagement metrics.", isCorrect: true, explanation: "This is the most ethical approach. It recognizes the platform's impact on cognitive health and takes proactive steps to mitigate harm, prioritizing user well-being over maximum engagement." },
+                    { text: "Launch a marketing campaign about 'digital wellness' and 'taking breaks' while making no changes to the highly addictive algorithm.", isCorrect: false, explanation: "This is an ethically weak response that places the entire burden on the user while the company continues to profit from the problematic system. It's a form of 'ethics washing' without making substantive changes." }
+                ]
             }
         ];
 
@@ -393,6 +571,16 @@
         nextBtn.addEventListener('click', nextScenario);
         restartBtn.addEventListener('click', restartGame);
         backToLearningBtn.addEventListener('click', backToLearning);
+        
+        document.querySelectorAll('.learning-item').forEach(card => {
+            card.addEventListener('click', () => {
+                const wasActive = card.classList.contains('active');
+                document.querySelectorAll('.learning-item').forEach(otherCard => otherCard.classList.remove('active'));
+                if (!wasActive) {
+                    card.classList.add('active');
+                }
+            });
+        });
 
         // Functions
         function startAssessment() {
@@ -409,7 +597,7 @@
         }
         
         function updateProgressBar() {
-            const progress = ((currentScenarioIndex + 1) / scenarios.length) * 100;
+            const progress = (currentScenarioIndex / scenarios.length) * 100;
             progressBar.style.width = `${progress}%`;
         }
 
@@ -445,6 +633,10 @@
             });
 
             nextBtn.style.display = 'inline-block';
+            
+            // Update progress bar after answering
+            const progress = ((currentScenarioIndex + 1) / scenarios.length) * 100;
+            progressBar.style.width = `${progress}%`;
         }
 
         function nextScenario() {
