@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Provenance and C2PA: An Interactive Guide for Educators</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .tab-button {
+            transition: all 0.3s ease;
+        }
+        .tab-button.active {
+            border-bottom: 3px solid #4f46e5;
+            color: #4f46e5;
+            font-weight: 700;
+        }
+        .quiz-option {
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+        .quiz-option:hover {
+            background-color: #eef2ff;
+        }
+        .quiz-option.selected {
+            background-color: #e0e7ff;
+            border-color: #6366f1;
+        }
+        .quiz-option.correct {
+            background-color: #dcfce7;
+            border-color: #22c55e;
+            color: #15803d;
+        }
+        .quiz-option.incorrect {
+            background-color: #fee2e2;
+            border-color: #ef4444;
+            color: #b91c1c;
+        }
+        .draggable {
+            cursor: move;
+            user-select: none;
+        }
+        .drop-zone {
+            transition: background-color 0.2s, border-color 0.2s;
+            min-height: 80px;
+        }
+        .drop-zone.drag-over {
+            background-color: #eef2ff;
+            border-style: dashed;
+            border-color: #6366f1;
+        }
+        .feedback-message {
+            display: none;
+            padding: 1rem;
+            margin-top: 1rem;
+            border-radius: 0.5rem;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+        .feedback-message.show {
+            display: block;
+            opacity: 1;
+        }
+        .feedback-message.success {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+        .feedback-message.error {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl sm:text-4xl font-bold text-gray-900">Navigating the New Landscape of Digital Trust</h1>
+            <p class="mt-2 text-lg text-gray-600">An Interactive Guide to Digital Provenance and C2PA for College Faculty</p>
+        </header>
+
+        <div class="bg-white rounded-lg shadow-xl p-6 sm:p-8">
+            <!-- Tabs -->
+            <div class="border-b border-gray-200 mb-6">
+                <nav class="-mb-px flex space-x-4 sm:space-x-8" aria-label="Tabs">
+                    <button class="tab-button active whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm sm:text-base" data-tab="introduction">Introduction</button>
+                    <button class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm sm:text-base" data-tab="c2pa">The C2PA Standard</button>
+                    <button class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm sm:text-base" data-tab="quiz">Check Your Knowledge</button>
+                    <button class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm sm:text-base" data-tab="scenario">Scenario Challenge</button>
+                </nav>
+            </div>
+
+            <!-- Tab Content -->
+            <div id="introduction" class="tab-content active">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">What is Digital Provenance?</h2>
+                <p class="mb-4 text-gray-700 leading-relaxed">In the art world, <strong class="font-semibold">provenance</strong> is the documented history of an object—its ownership, custody, and location. It's the "chain of custody" that proves authenticity and value. <strong class="font-semibold">Digital Provenance</strong> applies this same concept to the digital world. It's the verifiable record of a digital file's lifecycle, from its creation through every modification.</p>
+                <div class="bg-indigo-50 border-l-4 border-indigo-500 p-4 rounded-r-lg my-6">
+                    <p class="text-indigo-800">Think of it as a secure, tamper-evident "nutrition label" for digital content, showing you the ingredients and history of an image, video, or document.</p>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-800 mb-3">Why This Matters for Faculty</h3>
+                <ul class="list-disc list-inside space-y-3 text-gray-700">
+                    <li><strong class="font-semibold">Combating Misinformation:</strong> As AI-generated content becomes indistinguishable from reality, provenance helps you and your students verify the source and integrity of information used in research and assignments.</li>
+                    <li><strong class="font-semibold">Authenticating Student Work:</strong> How can you be sure a photo submitted for a journalism class wasn't a deepfake? Or that a research paper's data hasn't been manipulated? Provenance provides a technical foundation for trust.</li>
+                    <li><strong class="font-semibold">Protecting Intellectual Property:</strong> It allows creators (including faculty and students) to embed and protect their authorship and ownership information directly within their digital work.</li>
+                </ul>
+            </div>
+
+            <div id="c2pa" class="tab-content">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">The C2PA Standard: A United Front</h2>
+                <p class="mb-4 text-gray-700 leading-relaxed">The <strong class="font-semibold">Coalition for Content Provenance and Authenticity (C2PA)</strong> is a consortium of major tech and media companies (including Adobe, Microsoft, Intel, and the BBC) that has developed a free, open technical standard for digital provenance. Their goal is to create a universal framework for tracing the history of digital content.</p>
+                <h3 class="text-xl font-semibold text-gray-800 mb-3">How C2PA Works: Content Credentials</h3>
+                <p class="mb-4 text-gray-700">C2PA works by attaching <strong class="font-semibold">Content Credentials</strong> to a file. These credentials are a set of cryptographically signed, tamper-evident metadata. Here's a simplified breakdown:</p>
+                <ol class="list-decimal list-inside space-y-4 text-gray-700">
+                    <li>
+                        <strong>Creation:</strong> When a file is created with a C2PA-enabled device or software (like a new camera or a photo editor), a <strong class="font-semibold">manifest</strong> is generated. This manifest includes assertions about the creator, the tool used, and a cryptographic hash of the file.
+                    </li>
+                    <li>
+                        <strong>Signing:</strong> This manifest is then <strong class="font-semibold">cryptographically signed</strong> using a digital certificate, like the technology that secures websites (HTTPS). This proves who created the manifest and that it hasn't been altered.
+                    </li>
+                    <li>
+                        <strong>Editing:</strong> If the file is edited in another C2PA-enabled application, a new manifest is added, documenting the changes and linking back to the original. This creates a <strong class="font-semibold">"chain of provenance."</strong>
+                    </li>
+                    <li>
+                        <strong>Verification:</strong> Anyone with a C2PA-compatible tool can inspect the Content Credentials to see the file's full history, check for tampering, and verify the authenticity of its creators and editors.
+                    </li>
+                </ol>
+                 <div class="mt-6 p-4 bg-gray-100 rounded-lg">
+                    <p class="text-sm text-gray-600"><strong>Key takeaway:</strong> C2PA doesn't say if content is "true" or "false." It provides a verifiable history so that <em class="font-semibold">you</em>, the consumer, can make an informed judgment about its trustworthiness. The absence of Content Credentials on a piece of media will become just as informative as their presence.</p>
+                </div>
+            </div>
+
+            <div id="quiz" class="tab-content">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Check Your Knowledge</h2>
+                <div id="quiz-container"></div>
+                <button id="submit-quiz" class="mt-6 px-6 py-2 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Submit Answers</button>
+                <div id="quiz-results" class="mt-6 text-lg font-semibold"></div>
+            </div>
+
+            <div id="scenario" class="tab-content">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-2">Scenario Challenge</h2>
+                <p class="text-gray-600 mb-6">Drag each academic scenario on the left to the digital provenance concept that best addresses it on the right.</p>
+                <div class="flex flex-col lg:flex-row gap-8">
+                    <div id="scenarios-list" class="flex-1 space-y-4">
+                        <div class="draggable bg-white p-4 rounded-lg shadow border" draggable="true" data-match="chain">
+                            <p class="font-semibold">Scenario 1:</p>
+                            <p>A student submits a photograph for a science project. You need to verify it's their original photo and that the only edit was a minor color correction, as they claim.</p>
+                        </div>
+                         <div class="draggable bg-white p-4 rounded-lg shadow border" draggable="true" data-match="authenticity">
+                            <p class="font-semibold">Scenario 2:</p>
+                            <p>You find a compelling historical image online for your lecture. You need to confirm it came from a reputable archive and wasn't generated by an AI tool.</p>
+                        </div>
+                         <div class="draggable bg-white p-4 rounded-lg shadow border" draggable="true" data-match="authorship">
+                            <p class="font-semibold">Scenario 3:</p>
+                            <p>You are co-publishing a research paper and want to ensure all authors are permanently and verifiably credited within the document's metadata itself.</p>
+                        </div>
+                    </div>
+                    <div id="concepts-list" class="flex-1 space-y-4">
+                        <div class="drop-zone bg-gray-100 p-4 rounded-lg border-2 border-gray-300" data-concept="chain">
+                            <h3 class="font-bold text-gray-700 mb-2">Chain of Provenance</h3>
+                            <p class="text-sm text-gray-600">Verifying the sequence of edits and modifications to a file.</p>
+                        </div>
+                        <div class="drop-zone bg-gray-100 p-4 rounded-lg border-2 border-gray-300" data-concept="authenticity">
+                            <h3 class="font-bold text-gray-700 mb-2">Source Authenticity</h3>
+                            <p class="text-sm text-gray-600">Confirming the original source or creator of a digital asset.</p>
+                        </div>
+                        <div class="drop-zone bg-gray-100 p-4 rounded-lg border-2 border-gray-300" data-concept="authorship">
+                            <h3 class="font-bold text-gray-700 mb-2">Embedded Authorship</h3>
+                             <p class="text-sm text-gray-600">Attaching secure, verifiable creator information to a file.</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="scenario-feedback" class="feedback-message"></div>
+            </div>
+
+        </div>
+        <footer class="text-center mt-8 text-sm text-gray-500">
+            <p>This interactive guide is for educational purposes. The C2PA standard is continually evolving.</p>
+        </footer>
+    </div>
+
+    <script>
+        // --- Tab Navigation ---
+        const tabs = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(item => item.classList.remove('active'));
+                tab.classList.add('active');
+
+                const target = document.getElementById(tab.dataset.tab);
+                tabContents.forEach(content => content.classList.remove('active'));
+                target.classList.add('active');
+            });
+        });
+
+        // --- Quiz ---
+        const quizData = [
+            {
+                question: "What is the primary goal of digital provenance?",
+                options: [
+                    "To make digital files smaller",
+                    "To track the history and verify the authenticity of digital content",
+                    "To automatically grade student assignments",
+                    "To increase the speed of internet connections"
+                ],
+                answer: "To track the history and verify the authenticity of digital content"
+            },
+            {
+                question: "Who is leading the development of the C2PA standard?",
+                options: [
+                    "A single university research lab",
+                    "An independent group of artists",
+                    "A coalition of technology and media companies like Adobe and Microsoft",
+                    "A government regulatory agency"
+                ],
+                answer: "A coalition of technology and media companies like Adobe and Microsoft"
+            },
+            {
+                question: "What is a 'Content Credential' in the C2PA framework?",
+                options: [
+                    "A password to access a file",
+                    "A user rating of the content's quality",
+                    "A physical certificate of ownership",
+                    "A set of secure, tamper-evident metadata about a file's history"
+                ],
+                answer: "A set of secure, tamper-evident metadata about a file's history"
+            },
+            {
+                question: "How does C2PA help create a 'chain of provenance'?",
+                options: [
+                    "By preventing anyone from ever editing a file",
+                    "By adding a new, signed manifest each time a file is edited in a compatible tool",
+                    "By saving files on a special type of blockchain",
+                    "By emailing the creator every time the file is opened"
+                ],
+                answer: "By adding a new, signed manifest each time a file is edited in a compatible tool"
+            }
+        ];
+
+        const quizContainer = document.getElementById('quiz-container');
+        const submitButton = document.getElementById('submit-quiz');
+        const resultsContainer = document.getElementById('quiz-results');
+        let selectedAnswers = {};
+
+        function renderQuiz() {
+            quizContainer.innerHTML = '';
+            quizData.forEach((item, index) => {
+                const questionEl = document.createElement('div');
+                questionEl.classList.add('mb-6');
+                questionEl.innerHTML = `<p class="font-semibold mb-3">${index + 1}. ${item.question}</p>`;
+                
+                const optionsEl = document.createElement('div');
+                optionsEl.classList.add('space-y-2');
+                
+                item.options.forEach(option => {
+                    const optionEl = document.createElement('div');
+                    optionEl.classList.add('quiz-option', 'p-3', 'border', 'rounded-lg', 'cursor-pointer');
+                    optionEl.textContent = option;
+                    optionEl.addEventListener('click', () => {
+                        selectedAnswers[index] = option;
+                        // Update visual selection
+                        questionEl.querySelectorAll('.quiz-option').forEach(opt => opt.classList.remove('selected'));
+                        optionEl.classList.add('selected');
+                    });
+                    optionsEl.appendChild(optionEl);
+                });
+                questionEl.appendChild(optionsEl);
+                quizContainer.appendChild(questionEl);
+            });
+        }
+
+        submitButton.addEventListener('click', () => {
+            let score = 0;
+            quizContainer.querySelectorAll('.quiz-option').forEach(optionEl => {
+                optionEl.classList.remove('selected');
+            });
+
+            quizData.forEach((item, index) => {
+                const questionEl = quizContainer.children[index];
+                const options = questionEl.querySelectorAll('.quiz-option');
+                options.forEach(optionEl => {
+                    const isSelected = selectedAnswers[index] === optionEl.textContent;
+                    const isCorrect = item.answer === optionEl.textContent;
+
+                    if (isCorrect) {
+                        optionEl.classList.add('correct');
+                    }
+                    
+                    if (isSelected && !isCorrect) {
+                        optionEl.classList.add('incorrect');
+                    }
+                });
+
+                if (selectedAnswers[index] === item.answer) {
+                    score++;
+                }
+            });
+            resultsContainer.textContent = `You scored ${score} out of ${quizData.length}.`;
+        });
+
+        // --- Scenario Challenge ---
+        const draggables = document.querySelectorAll('.draggable');
+        const dropZones = document.querySelectorAll('.drop-zone');
+        const scenarioFeedback = document.getElementById('scenario-feedback');
+        let correctMatches = 0;
+
+        draggables.forEach(draggable => {
+            draggable.addEventListener('dragstart', () => {
+                draggable.classList.add('opacity-50');
+            });
+            draggable.addEventListener('dragend', () => {
+                draggable.classList.remove('opacity-50');
+            });
+        });
+
+        dropZones.forEach(zone => {
+            zone.addEventListener('dragover', e => {
+                e.preventDefault();
+                zone.classList.add('drag-over');
+            });
+            zone.addEventListener('dragleave', () => {
+                zone.classList.remove('drag-over');
+            });
+            zone.addEventListener('drop', e => {
+                e.preventDefault();
+                zone.classList.remove('drag-over');
+                const draggedId = document.querySelector('.opacity-50').dataset.match;
+                const zoneId = zone.dataset.concept;
+
+                if (draggedId === zoneId) {
+                    const draggedEl = document.querySelector('.opacity-50');
+                    draggedEl.style.display = 'none';
+                    zone.appendChild(draggedEl);
+                    draggedEl.style.display = 'block';
+                    draggedEl.draggable = false;
+                    draggedEl.classList.remove('draggable', 'bg-white', 'shadow', 'border');
+                    draggedEl.classList.add('bg-green-100', 'border-l-4', 'border-green-500', 'p-2', 'mb-2');
+                    correctMatches++;
+                    if (correctMatches === draggables.length) {
+                        scenarioFeedback.textContent = 'Excellent! You\'ve correctly matched all scenarios.';
+                        scenarioFeedback.className = 'feedback-message show success';
+                    }
+                } else {
+                    scenarioFeedback.textContent = 'Not quite. Think about the primary issue in the scenario and the concept that directly addresses it. Try again!';
+                    scenarioFeedback.className = 'feedback-message show error';
+                    setTimeout(() => {
+                         scenarioFeedback.classList.remove('show');
+                    }, 3000);
+                }
+            });
+        });
+
+        // Initial render
+        renderQuiz();
+    </script>
+</body>
+</html>
