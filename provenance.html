@@ -5,244 +5,178 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Digital Provenance and C2PA: An Interactive Guide for Educators</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --dark-navy-bg: #0a101f;
-            --surface-color: #10192b;
-            --accent-glow: #00bfff; /* Deep Sky Blue */
-            --text-primary: #e2e8f0;
-            --text-secondary: #94a3b8;
-            --border-color: #2d3748;
-            --success-bg: rgba(40, 167, 69, 0.1);
-            --success-border: #28a745;
-            --error-bg: rgba(220, 53, 69, 0.1);
-            --error-border: #dc3545;
-            --transition-fast: all 0.3s ease-in-out;
-        }
-
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--dark-navy-bg);
-            color: var(--text-primary);
+            background-color: #111827;
+            color: #F3F4F6;
         }
-
-        .main-container {
-            max-width: 1200px;
+        .glassmorphism {
+            background: rgba(31, 41, 55, 0.5);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
         }
-
-        header.main-header {
-            position: relative;
-            overflow: hidden;
+        .tab-button {
+            transition: all 0.3s ease;
         }
-
-        .header-glow {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 400px;
-            height: 200px;
-            background: var(--accent-glow);
-            border-radius: 50%;
-            filter: blur(100px);
-            transform: translate(-50%, -50%);
-            opacity: 0.1;
-            animation: pulseGlow 8s infinite alternate;
-            z-index: 0;
+        .tab-button.active {
+            background-color: #3B82F6;
+            color: white;
         }
-
-        @keyframes pulseGlow {
-            from { opacity: 0.05; transform: translate(-50%, -50%) scale(0.8); }
-            to { opacity: 0.15; transform: translate(-50%, -50%) scale(1.2); }
-        }
-
-        header.main-header .header-content {
-            position: relative;
-            z-index: 1;
-        }
-
-        header.main-header h1 {
-            font-family: 'Poppins', sans-serif;
-        }
-        
-        main.main-content {
-            background-color: var(--surface-color);
-            border: 1px solid var(--border-color);
-        }
-
-        .nav-item {
-            border: 2px solid transparent;
-            transition: var(--transition-fast);
-            color: var(--text-secondary);
-            font-weight: 600;
-        }
-        .nav-item:not(.active):hover {
-            border-color: var(--accent-glow);
-            background-color: rgba(0, 191, 255, 0.05);
-            color: var(--text-primary);
-        }
-        .nav-item.active {
-            background-color: var(--accent-glow);
-            color: var(--dark-navy-bg);
-            font-weight: 700;
-        }
-
         .tab-content {
             display: none;
         }
         .tab-content.active {
             display: block;
-            animation: fadeIn 0.7s ease-out;
+            animation: fadeIn 0.5s ease-in-out;
         }
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
         .quiz-option {
-            background: rgba(10, 16, 31, 0.5);
-            border: 1px solid var(--border-color);
-            transition: var(--transition-fast);
+            background-color: #1F2937; /* gray-800 */
+            transition: all 0.3s ease;
         }
         .quiz-option:hover {
-            transform: translateY(-3px);
-            border-color: var(--accent-glow);
+            background-color: #374151; /* gray-700 */
         }
         .quiz-option.selected {
-            border-color: var(--accent-glow);
-            background-color: rgba(0, 191, 255, 0.1);
+            border-color: #60A5FA;
+            background-color: #1E40AF; /* blue-800 */
         }
         .quiz-option.correct {
-            background-color: var(--success-bg);
-            border-color: var(--success-border);
+            background-color: #047857; /* green-700 */
+            border-color: #10B981; /* green-500 */
         }
         .quiz-option.incorrect {
-            background-color: var(--error-bg);
-            border-color: var(--error-border);
+            background-color: #991B1B; /* red-800 */
+            border-color: #F87171; /* red-400 */
         }
-        
         .draggable {
-            background: rgba(10, 16, 31, 0.5);
-            border: 1px solid var(--border-color);
-            transition: var(--transition-fast);
+            background-color: #1F2937;
+            transition: all 0.3s ease;
             cursor: move;
         }
         .draggable:hover {
-            transform: translateY(-5px);
-            border-color: var(--accent-glow);
+            background-color: #374151;
+            transform: translateY(-3px);
         }
         .drop-zone {
-            border: 2px dashed var(--border-color);
-            transition: var(--transition-fast);
+            border: 2px dashed #4B5563; /* gray-600 */
+            transition: all 0.3s ease;
         }
         .drop-zone.drag-over {
-            background-color: rgba(0, 191, 255, 0.1);
-            border-color: var(--accent-glow);
+            background-color: rgba(59, 130, 246, 0.2);
+            border-color: #3B82F6;
         }
         .feedback-message {
             display: none;
-            transition: opacity 0.5s;
         }
         .feedback-message.show {
             display: block;
         }
     </style>
 </head>
-<body class="bg-dark-navy-bg text-text-primary">
+<body class="antialiased">
 
-    <div class="main-container mx-auto p-4 sm:p-6 lg:p-12">
-        <header class="main-header text-center py-10 mb-10 rounded-lg">
-            <div class="header-glow"></div>
-            <div class="header-content">
-                <h1 class="text-4xl sm:text-5xl font-extrabold text-white mb-2">Digital Provenance & C2PA</h1>
-                <p class="text-xl sm:text-2xl text-text-secondary">An Interactive Guide for College Faculty</p>
-            </div>
+    <div class="container mx-auto p-4 md:p-8">
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-6xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">Digital Provenance & C2PA</h1>
+            <p class="mt-4 text-lg text-gray-400">An Interactive Journey for College Faculty</p>
         </header>
 
-        <nav class="p-2 rounded-lg mb-10 flex flex-wrap justify-center sticky top-4 z-10 gap-2 sm:gap-4 bg-black/30 backdrop-blur-sm border border-gray-700/50">
-            <button class="nav-item px-4 py-2 text-lg active" data-tab="introduction">Introduction</button>
-            <button class="nav-item px-4 py-2 text-lg" data-tab="c2pa">The C2PA Standard</button>
-            <button class="nav-item px-4 py-2 text-lg" data-tab="quiz">Check Your Knowledge</button>
-            <button class="nav-item px-4 py-2 text-lg" data-tab="scenario">Scenario Challenge</button>
-        </nav>
-
-        <main class="main-content rounded-xl shadow-lg p-6 sm:p-8">
-            <!-- Tab Content -->
-            <div id="introduction" class="tab-content active">
-                <h2 class="text-2xl font-semibold text-text-primary mb-4">What is Digital Provenance?</h2>
-                <p class="mb-4 text-text-secondary leading-relaxed">In the art world, <strong class="font-semibold text-text-primary">provenance</strong> is the documented history of an object—its ownership, custody, and location. It's the "chain of custody" that proves authenticity and value. <strong class="font-semibold text-text-primary">Digital Provenance</strong> applies this same concept to the digital world. It's the verifiable record of a digital file's lifecycle, from its creation through every modification.</p>
-                <div class="bg-surface-color border-l-4 border-accent-glow p-5 rounded-r-lg my-6">
-                    <p class="text-text-primary leading-relaxed">Think of it as a secure, tamper-evident "nutrition label" for digital content, showing you the ingredients and history of an image, video, or document.</p>
-                </div>
-                <h3 class="text-xl font-semibold text-text-primary mt-6 mb-3">Why This Matters for Faculty</h3>
-                <ul class="list-disc list-inside space-y-3 text-text-secondary">
-                    <li><strong class="font-semibold text-text-primary">Combating Misinformation:</strong> As AI-generated content becomes indistinguishable from reality, provenance helps you and your students verify the source and integrity of information used in research and assignments.</li>
-                    <li><strong class="font-semibold text-text-primary">Authenticating Student Work:</strong> How can you be sure a photo submitted for a journalism class wasn't a deepfake? Or that a research paper's data hasn't been manipulated? Provenance provides a technical foundation for trust.</li>
-                    <li><strong class="font-semibold text-text-primary">Protecting Intellectual Property:</strong> It allows creators (including faculty and students) to embed and protect their authorship and ownership information directly within their digital work.</li>
-                </ul>
+        <main>
+            <!-- Navigation Tabs -->
+            <div class="flex flex-wrap justify-center mb-8 space-x-2 md:space-x-4">
+                <button class="tab-button px-4 py-2 rounded-lg font-semibold active" data-tab="introduction">Introduction</button>
+                <button class="tab-button px-4 py-2 rounded-lg font-semibold" data-tab="c2pa">The C2PA Standard</button>
+                <button class="tab-button px-4 py-2 rounded-lg font-semibold" data-tab="quiz">Check Your Knowledge</button>
+                <button class="tab-button px-4 py-2 rounded-lg font-semibold" data-tab="scenario">Scenario Challenge</button>
             </div>
 
-            <div id="c2pa" class="tab-content">
-                <h2 class="text-2xl font-semibold text-text-primary mb-4">The C2PA Standard: A United Front</h2>
-                <p class="mb-4 text-text-secondary leading-relaxed">The <strong class="font-semibold text-text-primary">Coalition for Content Provenance and Authenticity (C2PA)</strong> is a consortium of major tech and media companies (including Adobe, Microsoft, Intel, and the BBC) that has developed a free, open technical standard for digital provenance. Their goal is to create a universal framework for tracing the history of digital content.</p>
-                <h3 class="text-xl font-semibold text-text-primary mt-6 mb-3">How C2PA Works: Content Credentials</h3>
-                <p class="mb-4 text-text-secondary">C2PA works by attaching <strong class="font-semibold text-text-primary">Content Credentials</strong> to a file. These credentials are a set of cryptographically signed, tamper-evident metadata. Here's a simplified breakdown:</p>
-                <ol class="list-decimal list-inside space-y-4 text-text-secondary">
-                    <li><strong class="font-semibold text-text-primary">Creation:</strong> When a file is created with a C2PA-enabled device or software, a <strong class="font-semibold">manifest</strong> is generated. This includes assertions about the creator, the tool used, and a cryptographic hash of the file.</li>
-                    <li><strong class="font-semibold text-text-primary">Signing:</strong> This manifest is then <strong class="font-semibold">cryptographically signed</strong> using a digital certificate. This proves who created the manifest and that it hasn't been altered.</li>
-                    <li><strong class="font-semibold text-text-primary">Editing:</strong> If the file is edited in another C2PA-enabled app, a new manifest is added, documenting the changes and linking back to the original. This creates a <strong class="font-semibold">"chain of provenance."</strong></li>
-                    <li><strong class="font-semibold text-text-primary">Verification:</strong> Anyone with a C2PA-compatible tool can inspect the Content Credentials to see the file's full history and verify its authenticity.</li>
-                </ol>
-                 <div class="mt-8 p-5 bg-dark-navy-bg rounded-lg">
-                    <p class="text-sm text-text-secondary leading-relaxed"><strong>Key takeaway:</strong> C2PA doesn't say if content is "true" or "false." It provides a verifiable history so that <em class="font-semibold text-text-primary">you</em>, the consumer, can make an informed judgment about its trustworthiness. The absence of Content Credentials on a piece of media will become just as informative as their presence.</p>
-                </div>
-            </div>
+            <!-- Content Sections -->
+            <div id="content">
+                <section id="introduction" class="tab-content active glassmorphism p-6 md:p-8">
+                    <h2 class="text-2xl font-bold mb-4">What is Digital Provenance?</h2>
+                    <p class="text-gray-300 leading-relaxed">In the art world, <strong class="font-semibold text-gray-100">provenance</strong> is the documented history of an object—its ownership, custody, and location. It's the "chain of custody" that proves authenticity and value. <strong class="font-semibold text-gray-100">Digital Provenance</strong> applies this same concept to the digital world. It's the verifiable record of a digital file's lifecycle, from its creation through every modification.</p>
+                    <div class="bg-gray-900 border-l-4 border-blue-500 p-5 rounded-r-lg my-6">
+                        <p class="text-gray-200 leading-relaxed">Think of it as a secure, tamper-evident "nutrition label" for digital content, showing you the ingredients and history of an image, video, or document.</p>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-100 mt-6 mb-3">Why This Matters for Faculty</h3>
+                    <ul class="list-disc list-inside space-y-3 text-gray-300">
+                        <li><strong class="font-semibold text-gray-100">Combating Misinformation:</strong> As AI-generated content becomes indistinguishable from reality, provenance helps you and your students verify the source and integrity of information used in research and assignments.</li>
+                        <li><strong class="font-semibold text-gray-100">Authenticating Student Work:</strong> How can you be sure a photo submitted for a journalism class wasn't a deepfake? Or that a research paper's data hasn't been manipulated? Provenance provides a technical foundation for trust.</li>
+                        <li><strong class="font-semibold text-gray-100">Protecting Intellectual Property:</strong> It allows creators (including faculty and students) to embed and protect their authorship and ownership information directly within their digital work.</li>
+                    </ul>
+                </section>
 
-            <div id="quiz" class="tab-content">
-                <h2 class="text-2xl font-semibold text-text-primary mb-6">Check Your Knowledge</h2>
-                <div id="quiz-container"></div>
-                <button id="submit-quiz" class="mt-6 px-8 py-3 bg-accent-glow text-dark-navy-bg font-semibold rounded-lg shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-glow transition-transform hover:scale-105">Submit Answers</button>
-                <div id="quiz-results" class="mt-6 text-lg font-semibold"></div>
-            </div>
+                <section id="c2pa" class="tab-content hidden glassmorphism p-6 md:p-8">
+                    <h2 class="text-2xl font-bold mb-4">The C2PA Standard: A United Front</h2>
+                    <p class="mb-4 text-gray-300 leading-relaxed">The <strong class="font-semibold text-gray-100">Coalition for Content Provenance and Authenticity (C2PA)</strong> is a consortium of major tech and media companies (including Adobe, Microsoft, Intel, and the BBC) that has developed a free, open technical standard for digital provenance. Their goal is to create a universal framework for tracing the history of digital content.</p>
+                    <h3 class="text-xl font-semibold text-gray-100 mt-6 mb-3">How C2PA Works: Content Credentials</h3>
+                    <p class="mb-4 text-gray-300">C2PA works by attaching <strong class="font-semibold text-gray-100">Content Credentials</strong> to a file. These credentials are a set of cryptographically signed, tamper-evident metadata. Here's a simplified breakdown:</p>
+                    <ol class="list-decimal list-inside space-y-4 text-gray-300">
+                        <li><strong class="font-semibold text-gray-100">Creation:</strong> When a file is created with a C2PA-enabled device or software, a <strong class="font-semibold">manifest</strong> is generated. This includes assertions about the creator, the tool used, and a cryptographic hash of the file.</li>
+                        <li><strong class="font-semibold text-gray-100">Signing:</strong> This manifest is then <strong class="font-semibold">cryptographically signed</strong> using a digital certificate. This proves who created the manifest and that it hasn't been altered.</li>
+                        <li><strong class="font-semibold text-gray-100">Editing:</strong> If the file is edited in another C2PA-enabled app, a new manifest is added, documenting the changes and linking back to the original. This creates a <strong class="font-semibold">"chain of provenance."</strong></li>
+                        <li><strong class="font-semibold text-gray-100">Verification:</strong> Anyone with a C2PA-compatible tool can inspect the Content Credentials to see the file's full history and verify its authenticity.</li>
+                    </ol>
+                     <div class="mt-8 p-5 bg-gray-900 rounded-lg">
+                        <p class="text-sm text-gray-400 leading-relaxed"><strong>Key takeaway:</strong> C2PA doesn't say if content is "true" or "false." It provides a verifiable history so that <em class="font-semibold text-gray-200">you</em>, the consumer, can make an informed judgment about its trustworthiness. The absence of Content Credentials on a piece of media will become just as informative as their presence.</p>
+                    </div>
+                </section>
 
-            <div id="scenario" class="tab-content">
-                <h2 class="text-2xl font-semibold text-text-primary mb-2">Scenario Challenge</h2>
-                <p class="text-text-secondary mb-6">Drag each academic scenario on the left to the digital provenance concept that best addresses it on the right.</p>
-                <div class="flex flex-col lg:flex-row gap-8">
-                    <div id="scenarios-list" class="flex-1 space-y-4">
-                        <div class="draggable p-4 rounded-lg" draggable="true" data-match="chain">
-                            <p class="font-semibold text-text-primary">Scenario 1:</p>
-                            <p class="text-text-secondary text-sm">A student submits a photograph for a science project. You need to verify it's their original photo and that the only edit was a minor color correction, as they claim.</p>
+                <section id="quiz" class="tab-content hidden glassmorphism p-6 md:p-8">
+                    <h2 class="text-2xl font-bold mb-6 text-center">Check Your Knowledge</h2>
+                    <div id="quiz-container"></div>
+                    <div class="text-center">
+                        <button id="submit-quiz" class="mt-6 px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md transition-transform hover:scale-105">Submit Answers</button>
+                    </div>
+                    <div id="quiz-results" class="mt-6 text-lg font-semibold text-center"></div>
+                </section>
+
+                <section id="scenario" class="tab-content hidden glassmorphism p-6 md:p-8">
+                    <h2 class="text-2xl font-bold mb-2 text-center">Scenario Challenge</h2>
+                    <p class="text-gray-300 mb-8 text-center">Drag each academic scenario on the left to the digital provenance concept that best addresses it on the right.</p>
+                    <div class="flex flex-col lg:flex-row gap-8">
+                        <div id="scenarios-list" class="flex-1 space-y-4">
+                            <div class="draggable p-4 rounded-lg border border-gray-700" draggable="true" data-match="chain">
+                                <p class="font-semibold text-gray-100">Scenario 1:</p>
+                                <p class="text-gray-400 text-sm">A student submits a photograph for a science project. You need to verify it's their original photo and that the only edit was a minor color correction, as they claim.</p>
+                            </div>
+                             <div class="draggable p-4 rounded-lg border border-gray-700" draggable="true" data-match="authenticity">
+                                <p class="font-semibold text-gray-100">Scenario 2:</p>
+                                <p class="text-gray-400 text-sm">You find a compelling historical image online for your lecture. You need to confirm it came from a reputable archive and wasn't generated by an AI tool.</p>
+                            </div>
+                             <div class="draggable p-4 rounded-lg border border-gray-700" draggable="true" data-match="authorship">
+                                <p class="font-semibold text-gray-100">Scenario 3:</p>
+                                <p class="text-gray-400 text-sm">You are co-publishing a research paper and want to ensure all authors are permanently and verifiably credited within the document's metadata itself.</p>
+                            </div>
                         </div>
-                         <div class="draggable p-4 rounded-lg" draggable="true" data-match="authenticity">
-                            <p class="font-semibold text-text-primary">Scenario 2:</p>
-                            <p class="text-text-secondary text-sm">You find a compelling historical image online for your lecture. You need to confirm it came from a reputable archive and wasn't generated by an AI tool.</p>
-                        </div>
-                         <div class="draggable p-4 rounded-lg" draggable="true" data-match="authorship">
-                            <p class="font-semibold text-text-primary">Scenario 3:</p>
-                            <p class="text-text-secondary text-sm">You are co-publishing a research paper and want to ensure all authors are permanently and verifiably credited within the document's metadata itself.</p>
+                        <div id="concepts-list" class="flex-1 space-y-4">
+                            <div class="drop-zone p-4 rounded-lg min-h-[100px]" data-concept="chain">
+                                <h3 class="font-bold text-gray-100 mb-2">Chain of Provenance</h3>
+                                <p class="text-sm text-gray-400">Verifying the sequence of edits and modifications to a file.</p>
+                            </div>
+                            <div class="drop-zone p-4 rounded-lg min-h-[100px]" data-concept="authenticity">
+                                <h3 class="font-bold text-gray-100 mb-2">Source Authenticity</h3>
+                                <p class="text-sm text-gray-400">Confirming the original source or creator of a digital asset.</p>
+                            </div>
+                            <div class="drop-zone p-4 rounded-lg min-h-[100px]" data-concept="authorship">
+                                <h3 class="font-bold text-gray-100 mb-2">Embedded Authorship</h3>
+                                 <p class="text-sm text-gray-400">Attaching secure, verifiable creator information to a file.</p>
+                            </div>
                         </div>
                     </div>
-                    <div id="concepts-list" class="flex-1 space-y-4">
-                        <div class="drop-zone p-4 rounded-lg" data-concept="chain">
-                            <h3 class="font-bold text-text-primary mb-2">Chain of Provenance</h3>
-                            <p class="text-sm text-text-secondary">Verifying the sequence of edits and modifications to a file.</p>
-                        </div>
-                        <div class="drop-zone p-4 rounded-lg" data-concept="authenticity">
-                            <h3 class="font-bold text-text-primary mb-2">Source Authenticity</h3>
-                            <p class="text-sm text-text-secondary">Confirming the original source or creator of a digital asset.</p>
-                        </div>
-                        <div class="drop-zone p-4 rounded-lg" data-concept="authorship">
-                            <h3 class="font-bold text-text-primary mb-2">Embedded Authorship</h3>
-                             <p class="text-sm text-text-secondary">Attaching secure, verifiable creator information to a file.</p>
-                        </div>
-                    </div>
-                </div>
-                <div id="scenario-feedback" class="feedback-message mt-6 p-4 rounded-lg"></div>
+                    <div id="scenario-feedback" class="feedback-message mt-6 p-4 rounded-lg text-center font-semibold"></div>
+                </section>
             </div>
         </main>
-        <footer class="text-center mt-10 text-sm text-text-secondary">
+        <footer class="text-center mt-12 text-sm text-gray-500">
             <p>&copy; 2024 Digital Provenance Guide. All rights reserved. For educational purposes only.</p>
         </footer>
     </div>
@@ -250,7 +184,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // --- Tab Navigation ---
-            const navItems = document.querySelectorAll('.nav-item');
+            const navItems = document.querySelectorAll('.tab-button');
             const tabContents = document.querySelectorAll('.tab-content');
 
             navItems.forEach(tab => {
@@ -258,9 +192,16 @@
                     navItems.forEach(item => item.classList.remove('active'));
                     tab.classList.add('active');
 
-                    const target = document.getElementById(tab.dataset.tab);
-                    tabContents.forEach(content => content.classList.remove('active'));
-                    target.classList.add('active');
+                    const targetId = tab.dataset.tab;
+                    tabContents.forEach(content => {
+                        if (content.id === targetId) {
+                            content.classList.remove('hidden');
+                            content.classList.add('active');
+                        } else {
+                            content.classList.add('hidden');
+                            content.classList.remove('active');
+                        }
+                    });
                 });
             });
 
@@ -283,14 +224,14 @@
                 quizData.forEach((item, index) => {
                     const questionEl = document.createElement('div');
                     questionEl.classList.add('mb-6');
-                    questionEl.innerHTML = `<p class="font-semibold text-text-primary mb-3">${index + 1}. ${item.question}</p>`;
+                    questionEl.innerHTML = `<p class="font-semibold text-gray-100 mb-3">${index + 1}. ${item.question}</p>`;
                     
                     const optionsEl = document.createElement('div');
                     optionsEl.classList.add('space-y-3');
                     
                     item.options.forEach(option => {
                         const optionEl = document.createElement('div');
-                        optionEl.className = 'quiz-option p-3 rounded-lg cursor-pointer';
+                        optionEl.className = 'quiz-option p-3 rounded-lg cursor-pointer border border-gray-700';
                         optionEl.textContent = option;
                         optionEl.addEventListener('click', () => {
                             selectedAnswers[index] = option;
@@ -365,21 +306,17 @@
                         zone.appendChild(draggedEl);
                         draggedEl.draggable = false;
                         draggedEl.style.cursor = 'default';
-                        draggedEl.classList.add('opacity-75', 'border-accent-glow');
+                        draggedEl.classList.add('opacity-75', 'border-blue-500');
                         correctMatches++;
                         if (correctMatches === draggables.length) {
                             scenarioFeedback.textContent = 'Excellent! You\'ve correctly matched all scenarios.';
-                            scenarioFeedback.style.backgroundColor = 'var(--success-bg)';
-                            scenarioFeedback.style.borderColor = 'var(--success-border)';
-                            scenarioFeedback.style.color = '#28a745';
-                            scenarioFeedback.classList.add('show', 'border-l-4');
+                            scenarioFeedback.style.color = '#34D399'; // green-400
+                            scenarioFeedback.classList.add('show');
                         }
                     } else {
                         scenarioFeedback.textContent = 'Not quite. Think about the primary issue in the scenario and the concept that directly addresses it. Try again!';
-                        scenarioFeedback.style.backgroundColor = 'var(--error-bg)';
-                        scenarioFeedback.style.borderColor = 'var(--error-border)';
-                        scenarioFeedback.style.color = '#dc3545';
-                        scenarioFeedback.classList.add('show', 'border-l-4');
+                        scenarioFeedback.style.color = '#F87171'; // red-400
+                        scenarioFeedback.classList.add('show');
                         setTimeout(() => scenarioFeedback.classList.remove('show'), 3000);
                     }
                 });
