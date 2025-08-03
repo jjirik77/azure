@@ -192,94 +192,102 @@
             space-y-2;
         }
         
-        /* Risk Slider */
-        .risk-rating-container {
-            margin-top: 2rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid var(--border-color);
-        }
-        .risk-rating-container label {
-            display: block;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 1rem;
-        }
-        .risk-slider {
-            width: 100%;
-            cursor: pointer;
-        }
-        .risk-labels {
+        /* Learning Item Styles */
+        .learning-item {
+            background: rgba(10, 16, 31, 0.5);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
             display: flex;
-            justify-content: space-between;
-            font-size: 0.9em;
-            color: var(--text-secondary);
-            margin-top: 0.5rem;
-        }
-        .submit-risk-btn {
-            background: transparent;
-            border: 1px solid var(--accent-glow);
-            color: var(--accent-glow);
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            cursor: pointer;
+            flex-direction: column;
+            gap: 1rem;
             transition: var(--transition-fast);
-            margin-top: 1rem;
-        }
-        .submit-risk-btn:hover {
-            background-color: var(--accent-glow);
-            color: var(--dark-navy-bg);
-        }
-        .risk-feedback {
-            margin-top: 1rem;
-            color: var(--text-secondary);
-            font-style: italic;
+            cursor: pointer;
         }
 
+        .learning-item:hover {
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3), 0 0 15px var(--shadow-color-hover);
+            border-color: var(--accent-glow);
+        }
+
+        .learning-item.active {
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3), 0 0 15px var(--shadow-color-hover);
+            border-color: var(--accent-glow);
+            background-color: rgba(0, 191, 255, 0.05);
+        }
+
+        .learning-item-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .learning-item .icon {
+            flex-shrink: 0;
+            width: 48px; height: 48px;
+            display: grid;
+            place-items: center;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--accent-glow) 0%, #2575fc 100%);
+            color: white;
+        }
+
+        .learning-item .icon svg {
+            width: 24px; height: 24px;
+        }
+
+        .learning-item h3 {
+            color: var(--text-primary);
+            font-size: 1.25em;
+            margin: 0;
+            font-weight: 600;
+        }
+        
         /* Glossary Styles */
         .glossary-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 1.5rem;
+            align-items: start;
         }
-        .flip-card {
-            background-color: transparent;
-            perspective: 1000px;
-            min-height: 150px;
-        }
-        .flip-card-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            text-align: center;
-            transition: transform 0.6s;
-            transform-style: preserve-3d;
-        }
-        .flip-card:hover .flip-card-inner {
-            transform: rotateY(180deg);
-        }
-        .flip-card-front, .flip-card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1.5rem;
-        }
-        .flip-card-front {
+        .glossary-card {
             background-color: var(--dark-navy-bg);
-            font-size: 1.25em;
-            font-weight: 600;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: var(--transition-fast);
         }
-        .flip-card-back {
-            background-color: var(--surface-color);
+        .glossary-card:hover {
+            border-color: var(--accent-glow);
+            background-color: rgba(0, 191, 255, 0.05);
+        }
+        .glossary-term {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+            transition: var(--transition-fast);
+        }
+        .glossary-definition {
+            font-size: 1em;
             color: var(--text-secondary);
-            transform: rotateY(180deg);
-            font-size: 0.95em;
+            line-height: 1.6;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out, margin-top 0.5s ease-in-out;
+            margin-top: 0;
+        }
+        .glossary-card.active .glossary-term {
+            color: var(--accent-glow);
+        }
+        .glossary-card.active .glossary-definition {
+            max-height: 200px; /* Adjust as needed */
+            margin-top: 1rem;
+        }
+        .glossary-card.active {
+             border-color: var(--accent-glow);
+             background-color: rgba(0, 191, 255, 0.05);
         }
 
         /* Connections Tool Styles */
@@ -287,14 +295,15 @@
             display: flex;
             gap: 2rem;
             align-items: flex-start;
+            flex-wrap: wrap;
         }
         #connections-controls {
             flex: 1;
             min-width: 250px;
         }
         #connections-chart-container {
-            flex: 1.5;
-            min-width: 300px;
+            flex: 2; /* Increased flex value for a larger chart */
+            min-width: 350px;
         }
         .connection-select {
             width: 100%;
@@ -582,7 +591,7 @@
                 scenario: "A high school history teacher encourages students to use a generative AI to help write their essays. The goal is to improve their final submissions. What is the most ethical way to implement this?",
                 choices: [
                     { text: "Allow students to use the AI to generate the entire essay and submit it as their own, as the final product is what matters.", isCorrect: false, explanation: "This approach completely undermines the purpose of the assignment, which is to develop the student's own research, writing, and critical thinking skills. It is a form of academic dishonesty." },
-                    { text: "Teach students to use the AI as a brainstorming partner or a tool to refine their own writing, requiring them to cite its use and submit their original drafts.", isCorrect: true, explanation: "This is the most responsible approach. It treats the AI as a tool to augment, not replace, human intellect. It fosters critical thinking by having students evaluate and build upon the AI's suggestions while maintaining academic integrity through citation." },
+                    { text: "Teach students to use the AI as a brainstorming partner or a tool to refine their own writing, requiring them to cite its use and submit their original drafts.", isCorrect: true, explanation: "This is the most responsible approach. It treats the AI as a tool to augment, not replace, human intellect. It fosters critical thinking byhaving students evaluate and build upon the AI's suggestions while maintaining academic integrity through citation." },
                     { text: "Forbid the use of AI entirely, as it's impossible to know if students are using it ethically.", isCorrect: false, explanation: "While seemingly safe, this approach is unrealistic in the modern world. It misses a crucial opportunity to teach students how to use powerful new technologies responsibly, a skill they will need for the rest of their lives." }
                 ]
             },
@@ -665,17 +674,6 @@
                         <p>${challenge.description}</p>
                         <h4>Solutions & Mitigations:</h4>
                         ${challenge.solution}
-                        <div class="risk-rating-container">
-                            <label for="risk-slider-${challenge.id}">How would you rate the societal risk of this challenge?</label>
-                            <input type="range" min="1" max="5" value="3" class="risk-slider" id="risk-slider-${challenge.id}">
-                            <div class="risk-labels">
-                                <span>Low</span>
-                                <span>Medium</span>
-                                <span>Critical</span>
-                            </div>
-                            <button class="submit-risk-btn" data-challenge="${challenge.id}">Submit Rating</button>
-                            <div class="risk-feedback" id="risk-feedback-${challenge.id}"></div>
-                        </div>
                     </div>
                 `;
                 contentArea.appendChild(section);
@@ -720,10 +718,10 @@
                 <h2 class="section-header">Glossary of Key Terms</h2>
                 <div class="glossary-grid">
                     ${glossaryTerms.map(item => `
-                        <div class="flip-card">
-                            <div class="flip-card-inner">
-                                <div class="flip-card-front">${item.term}</div>
-                                <div class="flip-card-back">${item.definition}</div>
+                        <div class="glossary-card">
+                            <p class="glossary-term">${item.term}</p>
+                            <div class="glossary-definition">
+                                <p>${item.definition}</p>
                             </div>
                         </div>
                     `).join('')}
@@ -734,7 +732,7 @@
         
         function initializeConnectionsTool() {
             const select = document.getElementById('connection-select');
-            if (!select) return;
+            if (!select || connectionsChart) return; // Prevent re-initialization
 
             challenges.forEach((c, index) => {
                 const option = document.createElement('option');
@@ -761,6 +759,8 @@
                     }]
                 },
                 options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
                     scales: {
                         r: {
                             angleLines: { color: 'rgba(226, 232, 240, 0.2)' },
@@ -809,25 +809,34 @@
                     if(targetSection) {
                         targetSection.classList.remove('hidden');
                         targetSection.classList.add('enhancedFadeIn');
-                        if (targetId === 'connections-section' && !connectionsChart) {
-                            initializeConnectionsTool();
+                        if (targetId === 'connections-section') {
+                           initializeConnectionsTool();
                         }
                     }
                 }
             }
         }
 
-        function handleRiskSubmit(e) {
-            if (e.target.matches('.submit-risk-btn')) {
-                const challengeId = e.target.dataset.challenge;
-                const feedbackEl = document.getElementById(`risk-feedback-${challengeId}`);
-                feedbackEl.textContent = "Thank you for your input! Your perspective helps us understand these challenges better.";
-                e.target.disabled = true;
+        function handleContentClick(e) {
+            // Handle Glossary Card Click
+            const clickedCard = e.target.closest('.glossary-card');
+            if (clickedCard) {
+                const wasActive = clickedCard.classList.contains('active');
+                
+                // Close all cards
+                document.querySelectorAll('.glossary-card').forEach(card => {
+                    card.classList.remove('active');
+                });
+
+                // If the card was not already active, open it
+                if (!wasActive) {
+                    clickedCard.classList.add('active');
+                }
             }
         }
 
         document.getElementById('nav-menu').addEventListener('click', handleNavClick);
-        contentArea.addEventListener('click', handleRiskSubmit);
+        contentArea.addEventListener('click', handleContentClick);
 
         // --- Assessment Functions ---
         function updateProgressBar() {
