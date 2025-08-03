@@ -338,8 +338,9 @@
             const analyzeSentimentBtn = document.getElementById('analyze-sentiment-btn');
             const nlpInput = document.getElementById('nlp-input');
             const nlpResult = document.getElementById('nlp-result');
-            const positiveWords = ['good', 'great', 'amazing', 'wonderful', 'love', 'happy', 'insightful', 'beautiful', 'excellent'];
-            const negativeWords = ['bad', 'terrible', 'awful', 'hate', 'sad', 'frustrated', 'traffic', 'angry'];
+            const positiveWords = ['good', 'great', 'amazing', 'wonderful', 'love', 'happy', 'insightful', 'beautiful', 'excellent', 'best'];
+            const negativeWords = ['bad', 'terrible', 'awful', 'hate', 'sad', 'frustrated', 'traffic', 'angry', 'worst', 'poor', 'disappointing', 'horrible', 'boring'];
+            const neutralWords = ['okay', 'ok', 'fine', 'alright', 'decent', 'average', 'as expected'];
 
             analyzeSentimentBtn.addEventListener('click', () => {
                 const text = nlpInput.value.toLowerCase();
@@ -355,6 +356,9 @@
                 } else if (negativeWords.some(word => text.includes(word))) {
                     sentiment = 'Negative';
                     emoji = '😠';
+                } else if (neutralWords.some(word => text.includes(word))) {
+                    sentiment = 'Neutral';
+                    emoji = '�';
                 }
                 nlpResult.innerHTML = `
                     <p class="text-6xl mb-2">${emoji}</p>
@@ -409,3 +413,4 @@
     </script>
 </body>
 </html>
+�
