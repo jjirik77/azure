@@ -7,176 +7,55 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* Global Styles & Font Import */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&display=swap');
-
-        :root {
-            --dark-navy-bg: #0a101f;
-            --surface-color: #10192b;
-            --accent-glow: #00bfff; /* Deep Sky Blue */
-            --accent-hover: #ffffff;
-            --text-primary: #e2e8f0;
-            --text-secondary: #94a3b8;
-            --border-color: #2d3748;
-            --shadow-color: rgba(0, 191, 255, 0.1);
-            --shadow-color-hover: rgba(0, 191, 255, 0.3);
-            --transition-fast: all 0.3s ease-in-out;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--dark-navy-bg);
-            background-image: radial-gradient(circle at top, #10192b, var(--dark-navy-bg));
-            color: var(--text-primary);
-            line-height: 1.6;
-            overflow-x: hidden;
+            background-color: #111827;
+            color: #F3F4F6;
             scroll-behavior: smooth;
         }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-image: url('https://www.transparenttextures.com/patterns/subtle-noise.png');
-            opacity: 0.03;
-            pointer-events: none;
-            z-index: -1;
+        .glassmorphism {
+            background: rgba(31, 41, 55, 0.5);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
         }
-        
-        /* Header */
-        header.main-header {
-            position: relative;
-            text-align: center;
-            padding: 2rem 1rem;
-            margin-bottom: 2rem;
-        }
-        
-        .header-glow {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 400px;
-            height: 200px;
-            background: var(--accent-glow);
-            border-radius: 50%;
-            filter: blur(100px);
-            transform: translate(-50%, -50%);
-            opacity: 0.1;
-            animation: pulseGlow 8s infinite alternate;
-            z-index: 0;
-        }
-
-        @keyframes pulseGlow {
-            from { opacity: 0.05; transform: translate(-50%, -50%) scale(0.8); }
-            to { opacity: 0.15; transform: translate(-50%, -50%) scale(1.2); }
-        }
-
-        header.main-header .header-content {
-            position: relative;
-            z-index: 1;
-        }
-
-        header.main-header h1 {
-            font-family: 'Poppins', sans-serif;
-            letter-spacing: 0.5px;
-            text-shadow: 0 0 15px rgba(0, 191, 255, 0.2);
-        }
-
-        /* Navigation */
-        .main-nav {
-            position: sticky;
-            top: 1rem;
-            z-index: 50;
-            background: rgba(10, 16, 31, 0.7);
-            backdrop-filter: blur(8px);
-            border: 1px solid var(--border-color);
-            border-radius: 0.75rem;
-            padding: 0.5rem;
-            margin-bottom: 2rem;
-        }
-
         .nav-link {
-            border: 2px solid transparent;
-            border-radius: 0.5rem;
-            transition: var(--transition-fast);
-            color: var(--text-secondary);
-            font-weight: 600;
+            transition: all 0.3s ease;
         }
         .nav-link:hover {
-            border-color: var(--accent-glow);
-            background-color: rgba(0, 191, 255, 0.05);
-            color: var(--text-primary);
+            background-color: #3B82F6;
+            color: white;
         }
-
-        /* Section Styling */
         .ai-section {
             padding-top: 5rem; /* Offset for sticky nav */
-            margin-top: -4rem;
+            margin-top: -5rem;
         }
-        
-        .section-header {
-            border-left: 6px solid var(--accent-glow);
-            padding-left: 1.25rem;
-            font-size: 2.5rem;
-            font-family: 'Poppins', sans-serif;
-            letter-spacing: 0.5px;
-            color: var(--text-primary);
-        }
-
-        .content-box {
-            background-color: rgba(10, 16, 31, 0.5);
-            border: 1px solid var(--border-color);
-            border-radius: 0.75rem;
-            padding: 2rem;
-        }
-        
-        /* Interactive Demo Styling */
-        .interactive-demo-area {
-            background-color: var(--dark-navy-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 0.75rem;
-            min-height: 300px;
-        }
-        
         .action-button {
-            background-color: var(--accent-glow);
-            color: var(--dark-navy-bg);
-            font-weight: 700;
-            border-radius: 0.5rem;
-            transition: var(--transition-fast);
-            box-shadow: 0 0 20px var(--shadow-color);
+             background-color: #3B82F6;
+             color: white;
+             transition: background-color 0.3s ease;
         }
         .action-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 0 30px var(--shadow-color-hover);
+            background-color: #2563EB;
         }
         .action-button:disabled {
-            background-color: var(--border-color);
-            color: var(--text-secondary);
+            background-color: #4B5563;
             cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
         }
-
         .styled-input {
-            background-color: var(--dark-navy-bg);
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-            border-radius: 0.5rem;
+            background-color: #1F2937;
+            border: 1px solid #4B5563;
         }
         .styled-input:focus {
             outline: none;
-            border-color: var(--accent-glow);
-            box-shadow: 0 0 10px var(--shadow-color);
+            border-color: #3B82F6;
         }
-        
-        /* Specific Demo Element Styles */
         .detection-box {
             position: absolute;
-            border: 2px solid var(--accent-glow);
+            border: 2px solid #3B82F6;
             transition: all 0.3s ease-in-out;
             opacity: 0;
             pointer-events: none;
@@ -186,10 +65,10 @@
         }
         .detection-label {
             position: absolute;
-            top: -20px;
-            left: 0;
-            background-color: var(--accent-glow);
-            color: var(--dark-navy-bg);
+            top: -22px;
+            left: -1px;
+            background-color: #3B82F6;
+            color: white;
             padding: 2px 6px;
             font-size: 12px;
             font-weight: bold;
@@ -197,170 +76,153 @@
         }
     </style>
 </head>
-<body class="leading-relaxed">
+<body class="antialiased">
 
-    <div class="container mx-auto p-4 sm:p-6 lg:p-8">
-
+    <div class="container mx-auto p-4 md:p-8">
         <!-- Header -->
-        <header class="main-header">
-            <div class="header-glow"></div>
-            <div class="header-content">
-                <h1 class="text-4xl sm:text-5xl font-extrabold text-white mb-2">A Guide to AI Concepts</h1>
-                <p class="text-lg sm:text-xl text-gray-400">An Interactive Learning Module</p>
-            </div>
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-6xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">A Guide to AI Concepts</h1>
+            <p class="mt-4 text-lg text-gray-400">An Interactive Learning Module</p>
         </header>
 
         <!-- Navigation -->
-        <nav class="main-nav flex flex-wrap justify-center gap-2">
-            <a href="#ml" class="nav-link px-3 py-2 text-sm md:text-base">Machine Learning</a>
-            <a href="#cv" class="nav-link px-3 py-2 text-sm md:text-base">Computer Vision</a>
-            <a href="#nlp" class="nav-link px-3 py-2 text-sm md:text-base">NLP</a>
-            <a href="#di" class="nav-link px-3 py-2 text-sm md:text-base">Document Intelligence</a>
-            <a href="#genai" class="nav-link px-3 py-2 text-sm md:text-base">Generative AI</a>
+        <nav class="sticky top-4 z-50 glassmorphism p-2 flex flex-wrap justify-center gap-2 mb-12">
+            <a href="#ml" class="nav-link px-4 py-2 rounded-lg font-semibold">Machine Learning</a>
+            <a href="#cv" class="nav-link px-4 py-2 rounded-lg font-semibold">Computer Vision</a>
+            <a href="#nlp" class="nav-link px-4 py-2 rounded-lg font-semibold">NLP</a>
+            <a href="#di" class="nav-link px-4 py-2 rounded-lg font-semibold">Document Intelligence</a>
+            <a href="#genai" class="nav-link px-4 py-2 rounded-lg font-semibold">Generative AI</a>
         </nav>
 
         <!-- Main Content Area -->
         <main>
             <!-- Introduction -->
-            <section id="intro" class="text-center py-12">
-                <h2 class="text-3xl font-bold mb-4 text-white">Welcome!</h2>
-                <p class="max-w-3xl mx-auto text-lg text-text-secondary">
+            <section id="intro" class="text-center py-8">
+                <h2 class="text-3xl font-bold mb-4">Welcome!</h2>
+                <p class="max-w-3xl mx-auto text-lg text-gray-300">
                     Artificial Intelligence is transforming our world, and its impact on modern life is just beginning. This interactive guide is designed to introduce you to five core concepts in AI. Let's explore how these technologies work and imagine how they might shape the future.
                 </p>
             </section>
 
             <!-- Machine Learning -->
-            <section id="ml" class="ai-section mb-16">
-                <h2 class="section-header mb-8">1. Machine Learning</h2>
-                <div class="content-box">
-                    <p class="text-text-secondary mb-6">
+            <section id="ml" class="ai-section my-8">
+                <div class="glassmorphism p-6 md:p-8">
+                    <h2 class="text-2xl font-bold mb-4 text-center">1. Machine Learning</h2>
+                    <p class="text-center text-gray-300 mb-8">
                         <strong>The Gist:</strong> Teaching computers to learn from data without being explicitly programmed. It's like a student learning to identify animals by looking at many pictures, rather than by memorizing a list of rules.
                     </p>
                     <div class="grid md:grid-cols-2 gap-8 items-center">
                         <div>
-                            <h4 class="text-xl font-semibold mb-2 text-white">Interactive Demo: Is it a Cat or a Dog?</h4>
-                            <p class="text-text-secondary mb-4">This simplified demo mimics how a machine learning model is "trained" on labeled data (images of cats and dogs) to make predictions on new, unseen images.</p>
-                            <button id="train-ml-btn" class="action-button py-2 px-4">Train Model</button>
+                            <h4 class="text-xl font-semibold mb-2">Interactive Demo: Is it a Cat or a Dog?</h4>
+                            <p class="text-gray-400 mb-4">This simplified demo mimics how a machine learning model is "trained" on labeled data (images of cats and dogs) to make predictions on new, unseen images.</p>
+                            <button id="train-ml-btn" class="action-button font-bold py-2 px-4 rounded-lg">Train Model</button>
                         </div>
-                        <div id="ml-interactive" class="interactive-demo-area p-4 flex flex-col justify-center items-center">
+                        <div class="bg-gray-900 rounded-lg p-4 flex flex-col justify-center items-center min-h-[300px]">
                             <div id="ml-initial-state" class="text-center">
-                                <p class="text-text-secondary">Click "Train Model" to begin.</p>
+                                <p class="text-gray-400">Click "Train Model" to begin.</p>
                             </div>
                             <div id="ml-training-state" class="hidden text-center w-full px-4">
                                 <p class="text-lg font-semibold mb-2">Training... Learning from data</p>
                                 <div class="relative mx-auto mb-4">
-                                    <img id="ml-training-image" src="https://placehold.co/150x150/0a101f/94a3b8?text=..." alt="Training data" class="rounded-lg h-36 w-36 object-cover shadow-md border border-border-color">
-                                    <svg id="ml-checkmark" class="hidden absolute top-2 right-2 w-8 h-8 text-green-400 bg-surface-color rounded-full p-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                    <img id="ml-training-image" src="https://placehold.co/150x150/1F2937/9CA3AF?text=..." alt="Training data" class="rounded-lg h-36 w-36 object-cover shadow-md border border-gray-700">
+                                    <svg id="ml-checkmark" class="hidden absolute top-2 right-2 w-8 h-8 text-green-400 bg-gray-800 rounded-full p-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                                 </div>
-                                <div class="w-full bg-dark-navy-bg rounded-full h-2.5 border border-border-color">
-                                    <div id="ml-progress-bar" class="bg-accent-glow h-full rounded-full" style="width: 0%"></div>
+                                <div class="w-full bg-gray-700 rounded-full h-2.5">
+                                    <div id="ml-progress-bar" class="bg-blue-500 h-2.5 rounded-full" style="width: 0%"></div>
                                 </div>
-                                <p class="text-sm mt-2 text-text-secondary">Model Accuracy: <span id="ml-accuracy-percent">50</span>%</p>
+                                <p class="text-sm mt-2 text-gray-400">Model Accuracy: <span id="ml-accuracy-percent">50</span>%</p>
                             </div>
                             <div id="ml-prediction-state" class="hidden text-center">
-                                 <img id="ml-test-image" src="https://placehold.co/200x200/0a101f/94a3b8?text=New+Image" alt="Test image" class="rounded-lg mx-auto mb-4 border border-border-color">
-                                <p class="text-xl font-bold text-white">Prediction: <span id="ml-prediction-result" class="text-accent-glow"></span></p>
-                                <p class="text-sm text-text-secondary">Confidence: <span id="ml-confidence"></span></p>
+                                 <img id="ml-test-image" src="https://placehold.co/200x200/1F2937/9CA3AF?text=New+Image" alt="Test image" class="rounded-lg mx-auto mb-4 border border-gray-700">
+                                <p class="text-xl font-bold">Prediction: <span id="ml-prediction-result" class="text-blue-400"></span></p>
+                                <p class="text-sm text-gray-400">Confidence: <span id="ml-confidence"></span></p>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- Computer Vision -->
-            <section id="cv" class="ai-section mb-16">
-                <h2 class="section-header mb-8">2. Computer Vision</h2>
-                <div class="content-box">
-                    <p class="text-text-secondary mb-6">
-                        <strong>The Gist:</strong> Enabling computers to "see" and interpret the visual world. From self-driving cars navigating roads to facial recognition on your phone, computer vision is all about understanding images and videos.
-                    </p>
+            <!-- Other sections follow the same pattern -->
+            <section id="cv" class="ai-section my-8">
+                <div class="glassmorphism p-6 md:p-8">
+                    <h2 class="text-2xl font-bold mb-4 text-center">2. Computer Vision</h2>
+                    <p class="text-center text-gray-300 mb-8"><strong>The Gist:</strong> Enabling computers to "see" and interpret the visual world. From self-driving cars navigating roads to facial recognition on your phone, computer vision is all about understanding images and videos.</p>
                     <div class="grid md:grid-cols-2 gap-8 items-center">
                         <div>
-                            <h4 class="text-xl font-semibold mb-2 text-white">Interactive Demo: Object Detection</h4>
-                            <p class="text-text-secondary mb-4">Click the button to have the AI model identify and label objects in this office scene. This is fundamental to how machines analyze their surroundings.</p>
-                            <button id="detect-objects-btn" class="action-button py-2 px-4">Detect Objects</button>
+                            <h4 class="text-xl font-semibold mb-2">Interactive Demo: Object Detection</h4>
+                            <p class="text-gray-400 mb-4">Click the button to have the AI model identify and label objects in this office scene. This is fundamental to how machines analyze their surroundings.</p>
+                            <button id="detect-objects-btn" class="action-button font-bold py-2 px-4 rounded-lg">Detect Objects</button>
                         </div>
-                        <div class="interactive-demo-area p-4 flex justify-center items-center">
+                        <div class="bg-gray-900 rounded-lg p-4 flex justify-center items-center min-h-[300px]">
                             <div id="cv-interactive" class="relative w-full max-w-md">
                                 <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=800&auto=format&fit=crop" alt="Office scene" class="rounded-lg w-full h-auto">
-                                <!-- Detection boxes will be inserted here by JS -->
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- Natural Language Processing -->
-            <section id="nlp" class="ai-section mb-16">
-                <h2 class="section-header mb-8">3. Natural Language Processing (NLP)</h2>
-                <div class="content-box">
-                    <p class="text-text-secondary mb-6">
-                        <strong>The Gist:</strong> Giving computers the ability to understand, interpret, and generate human language. This is the magic behind spam filters, language translation apps, and virtual assistants like Siri and Alexa.
-                    </p>
+            <section id="nlp" class="ai-section my-8">
+                <div class="glassmorphism p-6 md:p-8">
+                    <h2 class="text-2xl font-bold mb-4 text-center">3. Natural Language Processing (NLP)</h2>
+                    <p class="text-center text-gray-300 mb-8"><strong>The Gist:</strong> Giving computers the ability to understand, interpret, and generate human language. This is the magic behind spam filters, language translation apps, and virtual assistants like Siri and Alexa.</p>
                     <div class="grid md:grid-cols-2 gap-8 items-center">
                         <div>
-                            <h4 class="text-xl font-semibold mb-2 text-white">Interactive Demo: Sentiment Analyzer</h4>
-                            <p class="text-text-secondary mb-4">Type a sentence and let the AI determine its emotional tone. This is widely used to gauge customer feedback, social media trends, and more.</p>
-                            <textarea id="nlp-input" class="styled-input w-full p-2 mb-4" placeholder="e.g., 'This course is incredibly insightful!'"></textarea>
-                            <button id="analyze-sentiment-btn" class="action-button py-2 px-4">Analyze Sentiment</button>
+                            <h4 class="text-xl font-semibold mb-2">Interactive Demo: Sentiment Analyzer</h4>
+                            <p class="text-gray-400 mb-4">Type a sentence and let the AI determine its emotional tone. This is widely used to gauge customer feedback, social media trends, and more.</p>
+                            <textarea id="nlp-input" class="styled-input w-full p-2 rounded-lg mb-4" placeholder="e.g., 'This course is incredibly insightful!'"></textarea>
+                            <button id="analyze-sentiment-btn" class="action-button font-bold py-2 px-4 rounded-lg">Analyze Sentiment</button>
                         </div>
-                        <div class="interactive-demo-area p-4 flex justify-center items-center">
+                        <div class="bg-gray-900 rounded-lg p-4 flex justify-center items-center min-h-[300px]">
                             <div id="nlp-result" class="text-center">
-                                <p class="text-text-secondary">Analysis will appear here.</p>
+                                <p class="text-gray-400">Analysis will appear here.</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- Document Intelligence -->
-            <section id="di" class="ai-section mb-16">
-                <h2 class="section-header mb-8">4. Document Intelligence</h2>
-                <div class="content-box">
-                    <p class="text-text-secondary mb-6">
-                        <strong>The Gist:</strong> Extracting structured information from unstructured documents. Think of it as a super-powered research assistant that can read thousands of invoices, contracts, or historical records and pull out the key data points automatically.
-                    </p>
+            <section id="di" class="ai-section my-8">
+                <div class="glassmorphism p-6 md:p-8">
+                    <h2 class="text-2xl font-bold mb-4 text-center">4. Document Intelligence</h2>
+                    <p class="text-center text-gray-300 mb-8"><strong>The Gist:</strong> Extracting structured information from unstructured documents. Think of it as a super-powered research assistant that can read thousands of invoices, contracts, or historical records and pull out the key data points automatically.</p>
                     <div class="grid md:grid-cols-2 gap-8 items-center">
                         <div>
-                            <h4 class="text-xl font-semibold mb-2 text-white">Interactive Demo: Invoice Extractor</h4>
-                            <p class="text-text-secondary mb-4">Click to extract key information from this sample invoice. This automates tedious data entry and is crucial for knowledge mining from large document archives.</p>
-                            <button id="extract-doc-btn" class="action-button py-2 px-4">Extract Information</button>
+                            <h4 class="text-xl font-semibold mb-2">Interactive Demo: Invoice Extractor</h4>
+                            <p class="text-gray-400 mb-4">Click to extract key information from this sample invoice. This automates tedious data entry and is crucial for knowledge mining from large document archives.</p>
+                            <button id="extract-doc-btn" class="action-button font-bold py-2 px-4 rounded-lg">Extract Information</button>
                         </div>
-                        <div class="interactive-demo-area p-4 flex flex-col md:flex-row gap-4 items-center">
+                        <div class="bg-gray-900 rounded-lg p-4 flex flex-col md:flex-row gap-4 items-center min-h-[300px]">
                             <div class="relative w-full md:w-1/2">
-                                <img src="https://templates.invoicehome.com/invoice-template-us-neat-750px.png" alt="Sample Invoice" class="rounded-lg w-full h-auto shadow-md" onerror="this.onerror=null;this.src='https://placehold.co/400x550/0a101f/94a3b8?text=Invoice+Not+Found';">
-                                <!-- Highlight boxes will be inserted here by JS -->
+                                <img src="https://templates.invoicehome.com/invoice-template-us-neat-750px.png" alt="Sample Invoice" class="rounded-lg w-full h-auto shadow-md" onerror="this.onerror=null;this.src='https://placehold.co/400x550/1F2937/9CA3AF?text=Invoice+Not+Found';">
                             </div>
-                            <div id="di-results" class="w-full md:w-1/2 p-4 bg-dark-navy-bg rounded-lg">
-                                <h5 class="font-bold mb-2 text-white">Extracted Data:</h5>
-                                <p class="text-text-secondary">Click the button to see results.</p>
+                            <div id="di-results" class="w-full md:w-1/2 p-4 bg-gray-800 rounded-lg">
+                                <h5 class="font-bold mb-2">Extracted Data:</h5>
+                                <p class="text-gray-400">Click the button to see results.</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- Generative AI -->
-            <section id="genai" class="ai-section mb-16">
-                <h2 class="section-header mb-8">5. Generative AI</h2>
-                <div class="content-box">
-                    <p class="text-text-secondary mb-6">
-                        <strong>The Gist:</strong> AI that creates new, original content. From writing essays and code to creating photorealistic images and music, Generative AI is a powerful tool for creativity and content creation.
-                    </p>
+            <section id="genai" class="ai-section my-8">
+                <div class="glassmorphism p-6 md:p-8">
+                    <h2 class="text-2xl font-bold mb-4 text-center">5. Generative AI</h2>
+                    <p class="text-center text-gray-300 mb-8"><strong>The Gist:</strong> AI that creates new, original content. From writing essays and code to creating photorealistic images and music, Generative AI is a powerful tool for creativity and content creation.</p>
                     <div class="grid md:grid-cols-2 gap-8 items-center">
                         <div>
-                            <h4 class="text-xl font-semibold mb-2 text-white">Interactive Demo: Simple Poem Generator</h4>
-                            <p class="text-text-secondary mb-4">Select a topic and let the AI generate a short poem. This demonstrates the basic principle of generating new text based on a prompt.</p>
-                            <select id="poem-topic" class="styled-input w-full p-2 mb-4">
+                            <h4 class="text-xl font-semibold mb-2">Interactive Demo: Simple Poem Generator</h4>
+                            <p class="text-gray-400 mb-4">Select a topic and let the AI generate a short poem. This demonstrates the basic principle of generating new text based on a prompt.</p>
+                            <select id="poem-topic" class="styled-input w-full p-2 rounded-lg mb-4">
                                 <option value="nature">Nature</option>
                                 <option value="technology">Technology</option>
                                 <option value="seasons">The Seasons</option>
                             </select>
-                            <button id="generate-poem-btn" class="action-button py-2 px-4">Generate Poem</button>
+                            <button id="generate-poem-btn" class="action-button font-bold py-2 px-4 rounded-lg">Generate Poem</button>
                         </div>
-                        <div class="interactive-demo-area p-4 flex justify-center items-center">
-                            <div id="poem-output" class="text-center p-4 bg-dark-navy-bg rounded-lg">
-                                <p class="text-text-secondary">Your poem will appear here.</p>
+                        <div class="bg-gray-900 rounded-lg p-4 flex justify-center items-center min-h-[300px]">
+                            <div id="poem-output" class="text-center p-4 bg-gray-800 rounded-lg">
+                                <p class="text-gray-400">Your poem will appear here.</p>
                             </div>
                         </div>
                     </div>
@@ -375,8 +237,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-
-            // --- Machine Learning Demo ---
             const trainMlBtn = document.getElementById('train-ml-btn');
             const mlInitialState = document.getElementById('ml-initial-state');
             const mlTrainingState = document.getElementById('ml-training-state');
@@ -421,10 +281,8 @@
                 const trainingInterval = setInterval(() => {
                     progress += 1.25;
                     accuracy = Math.min(98, 50 + (progress / 100) * 48); 
-
                     mlProgressBar.style.width = `${progress}%`;
                     mlAccuracyPercent.textContent = Math.round(accuracy);
-                    
                     imageIndex = (imageIndex + 1) % trainingData.length;
                     const currentItem = trainingData[imageIndex];
                     mlTrainingImage.src = currentItem.src;
@@ -437,7 +295,6 @@
 
                     if (progress >= 100) {
                         clearInterval(trainingInterval);
-                        
                         setTimeout(() => {
                             mlTrainingState.classList.add('hidden');
                             const randomImage = testImages[Math.floor(Math.random() * testImages.length)];
@@ -451,7 +308,6 @@
                 }, 40);
             });
 
-            // --- Computer Vision Demo ---
             const detectObjectsBtn = document.getElementById('detect-objects-btn');
             const cvInteractive = document.getElementById('cv-interactive');
             const objects = [
@@ -479,8 +335,6 @@
                 });
             });
 
-
-            // --- NLP Demo ---
             const analyzeSentimentBtn = document.getElementById('analyze-sentiment-btn');
             const nlpInput = document.getElementById('nlp-input');
             const nlpResult = document.getElementById('nlp-result');
@@ -490,7 +344,7 @@
             analyzeSentimentBtn.addEventListener('click', () => {
                 const text = nlpInput.value.toLowerCase();
                 if (text.trim() === '') {
-                    nlpResult.innerHTML = `<p class="text-text-secondary">Please enter some text.</p>`;
+                    nlpResult.innerHTML = `<p class="text-gray-400">Please enter some text.</p>`;
                     return;
                 }
                 let sentiment = 'Neutral';
@@ -504,11 +358,10 @@
                 }
                 nlpResult.innerHTML = `
                     <p class="text-6xl mb-2">${emoji}</p>
-                    <p class="text-2xl font-bold">Sentiment: <span style="color: var(--accent-glow);">${sentiment}</span></p>
+                    <p class="text-2xl font-bold">Sentiment: <span class="text-blue-400">${sentiment}</span></p>
                 `;
             });
             
-            // --- Document Intelligence Demo ---
             const extractDocBtn = document.getElementById('extract-doc-btn');
             const diResults = document.getElementById('di-results');
             const invoiceImageContainer = document.querySelector('#di .relative');
@@ -519,13 +372,13 @@
             ];
 
             extractDocBtn.addEventListener('click', () => {
-                diResults.innerHTML = '<h5 class="font-bold mb-2 text-white">Extracted Data:</h5>';
+                diResults.innerHTML = '<h5 class="font-bold mb-2">Extracted Data:</h5>';
                 invoiceImageContainer.querySelectorAll('.detection-box').forEach(box => box.remove());
                 const ul = document.createElement('ul');
-                ul.className = 'space-y-2';
+                ul.className = 'space-y-2 text-gray-300';
                 invoiceData.forEach(item => {
                     const li = document.createElement('li');
-                    li.innerHTML = `<strong>${item.key}:</strong> <span style="color: var(--accent-glow);">${item.value}</span>`;
+                    li.innerHTML = `<strong>${item.key}:</strong> <span class="text-blue-400 font-semibold">${item.value}</span>`;
                     ul.appendChild(li);
                     const box = document.createElement('div');
                     box.className = 'detection-box';
@@ -539,8 +392,6 @@
                 diResults.appendChild(ul);
             });
 
-
-            // --- Generative AI Demo ---
             const generatePoemBtn = document.getElementById('generate-poem-btn');
             const poemTopic = document.getElementById('poem-topic');
             const poemOutput = document.getElementById('poem-output');
@@ -552,9 +403,8 @@
 
             generatePoemBtn.addEventListener('click', () => {
                 const topic = poemTopic.value;
-                poemOutput.innerHTML = `<p class="text-lg italic text-text-primary">${poems[topic]}</p>`;
+                poemOutput.innerHTML = `<p class="text-lg italic text-gray-300">${poems[topic]}</p>`;
             });
-
         });
     </script>
 </body>
