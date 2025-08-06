@@ -1,1 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive OCR Study Tool</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827; /* gray-900 */
+            color: #F3F4F6; /* gray-100 */
+        }
+        .glassmorphism {
+            background: rgba(31, 41, 55, 0.5); /* gray-800 with opacity */
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+        .concept-card {
+            background-color: #1F2937; /* gray-800 */
+            transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
+            cursor: pointer;
+            perspective: 1000px;
+        }
+        .concept-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .concept-card.flipped .concept-card-inner {
+            transform: rotateY(180deg);
+        }
+        .concept-card-front, .concept-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+        .concept-card-front {
+            background-color: #1F2937;
+        }
+        .concept-card-back {
+            background-color: #374151;
+            transform: rotateY(180deg);
+        }
+        .btn-sample {
+            background-color: #374151; /* gray-700 */
+            color: #F3F4F6;
+        }
+        .btn-sample:hover {
+            background-color: #4B5563; /* gray-600 */
+        }
+        .btn-sample.active {
+            background-color: #3B82F6; /* blue-500 */
+            color: white;
+        }
+        #image-display-wrapper {
+            position: relative;
+            width: 100%;
+            margin: auto;
+            background-color: #1F2937; /* gray-800 */
+            border-radius: 0.5rem;
+            min-height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        #image-display {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* This is key to making the image fit */
+            border-radius: 0.5rem;
+        }
+        .text-overlay {
+            position: absolute;
+            border: 2px solid #FBBF24; /* amber-400 */
+            box-sizing: border-box;
+            transition: background-color 0.2s;
+            cursor: pointer;
+            border-radius: 2px;
+        }
+        .text-overlay:hover {
+            background-color: rgba(251, 191, 36, 0.3); /* amber-400 with opacity */
+        }
+        #content-window {
+            background-color: #1F2937; /* gray-800 */
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            min-height: 400px;
+            font-family: monospace;
+            color: #D1D5DB; /* gray-300 */
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="max-w-6xl mx-auto p-4 md:p-8">
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">Optical Character Recognition (OCR)</h1>
+            <p class="mt-4 text-lg text-gray-400">An Interactive Study Guide</p>
+        </header>
+
+        <!-- Introduction Section -->
+        <div class="glassmorphism p-6 md:p-8 mb-8">
+            <h2 class="text-2xl font-bold mb-3 text-blue-400">What is OCR?</h2>
+            <p class="text-gray-300">
+                The ability for computer systems to process written and printed text is an area of AI where <strong>Computer Vision</strong> intersects with <strong>Natural Language Processing</strong>. Vision capabilities are needed to "read" the text from an image, and then natural language processing capabilities are used to make sense of it. OCR is the foundational technology that recognizes individual shapes as letters, numbers, and punctuation, turning images of text into machine-readable data.
+            </p>
+        </div>
+
+        <!-- Key Concepts Section -->
+        <div class="glassmorphism p-6 md:p-8 mb-8">
+            <h2 class="text-2xl font-bold mb-6 text-center text-blue-400">Key Concepts</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="concepts-grid">
+                <!-- Concept cards will be injected here by JS -->
+            </div>
+        </div>
+
+        <!-- OCR Simulator Section -->
+        <div class="glassmorphism p-6 md:p-8 mb-8">
+            <div class="text-center">
+                 <h2 class="text-2xl font-bold mb-1 text-blue-400">Azure's Read API in Action</h2>
+                 <p class="mb-6 text-gray-400">Select a sample image to see the OCR results.</p>
+            </div>
+           
+            <div class="grid md:grid-cols-2 gap-6 items-start">
+                <!-- Left Column: Image -->
+                <div class="space-y-4">
+                    <div class="flex flex-wrap justify-center gap-3" id="sample-buttons">
+                        <!-- Sample image buttons will be injected here by JS -->
+                    </div>
+                    <div id="image-display-wrapper">
+                        <p class="text-gray-500" id="image-placeholder">Select a sample to begin</p>
+                        <img id="image-display" src="" alt="OCR Sample">
+                        <!-- Text Overlays will be added here by JS -->
+                    </div>
+                </div>
+
+                <!-- Right Column: Content -->
+                <div class="space-y-4">
+                    <div id="content-window" class="h-full">
+                        <p class="text-gray-500">Extracted content will appear here...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Quiz Section -->
+        <div class="glassmorphism p-6 md:p-8 mb-8">
+            <h2 class="text-2xl font-bold mb-3 text-blue-400">Knowledge Check: Azure Resources</h2>
+            <p class="mb-4 text-gray-300" id="quiz-question">You plan to build an application that uses OCR, text-to-speech, and language translation. Which Azure resource type is most suitable for simplifying administration?</p>
+            <div id="quiz-options" class="space-y-3">
+                <button class="w-full text-left p-3 bg-gray-800 hover:bg-gray-700 rounded-lg transition" data-answer="vision">A) Azure AI Vision</button>
+                <button class="w-full text-left p-3 bg-gray-800 hover:bg-gray-700 rounded-lg transition" data-answer="services">B) Azure AI services</button>
+            </div>
+            <p id="quiz-feedback" class="mt-4 font-medium h-12"></p>
+        </div>
+
+    </div>
+
+    <script>
+        // --- DATA ---
+        const concepts = [
+            { term: 'Computer Vision', definition: 'An AI field that trains computers to interpret and understand the visual world from digital images and videos.' },
+            { term: 'Natural Language Processing', definition: 'A branch of AI that helps computers understand, interpret, and generate human language in a valuable way.' },
+            { term: 'Bounding Box', definition: 'The coordinates that define a rectangle around an object (like text) in an image. It indicates the location of the detected item.' },
+            { term: 'Read API', definition: "Azure AI Vision's advanced OCR engine, optimized for images with lots of text, visual noise, or handwriting." },
+            { term: 'Vision Studio', definition: 'A web-based GUI that allows you to explore and test Azure AI Vision features without writing any code.' },
+            { term: 'JSON', definition: 'A standard text-based format for representing structured data. APIs, like the Read API, often return their results in this format.' }
+        ];
+
+        // --- SELF-CONTAINED IMAGE DATA ---
+        const sampleData = {
+            receipt: {
+                id: 'receipt',
+                name: 'Receipt',
+                svg: `<svg viewBox="0 0 400 600" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="400" height="600" fill="#f7fafc"/>
+                        <text x="50%" y="80" font-family="monospace" font-size="30" text-anchor="middle" fill="#2d3748">RECEIPT</text>
+                        <text x="30" y="170" font-family="monospace" font-size="24" fill="#2d3748">Item 1</text>
+                        <text x="370" y="170" font-family="monospace" font-size="24" text-anchor="end" fill="#2d3748">10.00</text>
+                        <text x="30" y="210" font-family="monospace" font-size="24" fill="#2d3748">Item 2</text>
+                        <text x="370" y="210" font-family="monospace" font-size="24" text-anchor="end" fill="#2d3748">5.50</text>
+                        <line x1="30" y1="250" x2="370" y2="250" stroke="#a0aec0" stroke-width="2"/>
+                        <text x="30" y="290" font-family="monospace" font-size="24" font-weight="bold" fill="#2d3748">TOTAL</text>
+                        <text x="370" y="290" font-family="monospace" font-size="24" font-weight="bold" text-anchor="end" fill="#2d3748">15.50</text>
+                      </svg>`,
+                naturalWidth: 400,
+                naturalHeight: 600,
+                results: { pages: [{ lines: [
+                    { text: "RECEIPT", words: [{ text: "RECEIPT", box: [138, 55, 262, 85] }] },
+                    { text: "Item 1 10.00", words: [{ text: "Item", box: [30, 150, 94, 173] }, { text: "1", box: [101, 150, 115, 173] }, { text: "10.00", box: [299, 150, 370, 173] }] },
+                    { text: "Item 2 5.50", words: [{ text: "Item", box: [30, 190, 94, 213] }, { text: "2", box: [101, 190, 115, 213] }, { text: "5.50", box: [313, 190, 370, 213] }] },
+                    { text: "TOTAL 15.50", words: [{ text: "TOTAL", box: [30, 270, 101, 293] }, { text: "15.50", box: [299, 270, 370, 293] }] }
+                ]}] }
+            },
+            handwriting: {
+                id: 'handwriting',
+                name: 'Handwritten Note',
+                svg: `<svg viewBox="0 0 500 300" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="500" height="300" fill="#fffff0"/>
+                        <text x="60" y="130" font-family="cursive" font-size="40" fill="#00008b" transform="rotate(-2 150 150)">Don't forget</text>
+                        <text x="60" y="200" font-family="cursive" font-size="40" fill="#00008b" transform="rotate(-2 150 150)">milk!</text>
+                      </svg>`,
+                naturalWidth: 500,
+                naturalHeight: 300,
+                results: { pages: [{ lines: [
+                    { text: "Don't forget", words: [{ text: "Don't", box: [58, 95, 138, 132] }, { text: "forget", box: [150, 95, 253, 132] }] },
+                    { text: "milk!", words: [{ text: "milk!", box: [58, 165, 132, 202] }] }
+                ]}] }
+            },
+            street_sign: {
+                id: 'street_sign',
+                name: 'Street Sign',
+                svg: `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                        <polygon points="60,10 140,10 190,60 190,140 140,190 60,190 10,140 10,60" fill="#cc0000"/>
+                        <text x="100" y="115" font-family="sans-serif" font-size="60" font-weight="bold" text-anchor="middle" fill="white">STOP</text>
+                      </svg>`,
+                naturalWidth: 200,
+                naturalHeight: 200,
+                results: { pages: [{ lines: [
+                    { text: "STOP", words: [{ text: "STOP", box: [40, 75, 160, 120] }] }
+                ]}] }
+            }
+        };
+
+        // --- DOM ELEMENTS ---
+        const conceptsGrid = document.getElementById('concepts-grid');
+        const sampleButtonsContainer = document.getElementById('sample-buttons');
+        const imageDisplayWrapper = document.getElementById('image-display-wrapper');
+        const imagePlaceholder = document.getElementById('image-placeholder');
+        const imageDisplay = document.getElementById('image-display');
+        const contentWindow = document.getElementById('content-window');
+        const quizOptions = document.getElementById('quiz-options');
+        const quizFeedback = document.getElementById('quiz-feedback');
+        
+        let currentSampleId = null;
+
+        // --- INITIALIZATION ---
+        function init() {
+            populateConcepts();
+            populateSampleButtons();
+            addEventListeners();
+        }
+
+        function populateConcepts() {
+            conceptsGrid.innerHTML = '';
+            concepts.forEach(concept => {
+                const card = document.createElement('div');
+                card.className = 'concept-card h-40';
+                card.innerHTML = `
+                    <div class="concept-card-inner">
+                        <div class="concept-card-front">
+                            <h3 class="font-semibold text-lg text-gray-200">${concept.term}</h3>
+                            <p class="text-sm text-gray-400 mt-2">Click to reveal</p>
+                        </div>
+                        <div class="concept-card-back">
+                            <p class="text-gray-300 text-sm">${concept.definition}</p>
+                        </div>
+                    </div>
+                `;
+                card.addEventListener('click', () => card.classList.toggle('flipped'));
+                conceptsGrid.appendChild(card);
+            });
+        }
+        
+        function populateSampleButtons() {
+            Object.values(sampleData).forEach(sample => {
+                const button = document.createElement('button');
+                button.className = 'btn-sample px-4 py-2 rounded-lg font-semibold transition';
+                button.textContent = sample.name;
+                button.dataset.id = sample.id;
+                button.addEventListener('click', () => handleSampleSelect(sample.id));
+                sampleButtonsContainer.appendChild(button);
+            });
+        }
+
+        // --- EVENT HANDLERS ---
+        function addEventListeners() {
+            quizOptions.addEventListener('click', handleQuizAnswer);
+            // Add resize listener to redraw overlays correctly if the window changes size
+            window.addEventListener('resize', () => {
+                if (currentSampleId) {
+                    renderOverlays(sampleData[currentSampleId]);
+                }
+            });
+        }
+
+        function handleSampleSelect(sampleId) {
+            currentSampleId = sampleId;
+
+            // --- Reset UI state ---
+            clearOverlays();
+            imagePlaceholder.classList.add('hidden');
+            
+            // --- Update button active state ---
+            document.querySelectorAll('.btn-sample').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.id === sampleId);
+            });
+            
+            // --- Load new image from SVG data ---
+            const data = sampleData[sampleId];
+            const svgString = data.svg;
+            const encodedSvg = btoa(svgString);
+            imageDisplay.src = `data:image/svg+xml;base64,${encodedSvg}`;
+            
+            // --- Perform OCR automatically on image load ---
+            imageDisplay.onload = () => {
+                // Use a short timeout to ensure the browser has rendered the image and its container
+                setTimeout(() => {
+                    renderOverlays(data);
+                    displayExtractedContent(data);
+                }, 50);
+                imageDisplay.onload = null; // Clean up listener
+            };
+        }
+        
+        function handleQuizAnswer(e) {
+            if (e.target.tagName !== 'BUTTON') return;
+            const selectedAnswer = e.target.dataset.answer;
+            quizOptions.querySelectorAll('button').forEach(btn => {
+                btn.disabled = true;
+                btn.classList.remove('hover:bg-gray-700');
+            });
+
+            if (selectedAnswer === 'services') {
+                quizFeedback.textContent = "Correct! The 'Azure AI services' resource is a general-purpose resource that simplifies administration when using multiple AI services together.";
+                quizFeedback.className = 'mt-4 font-medium h-12 text-green-400';
+                e.target.classList.replace('bg-gray-800', 'bg-green-500');
+            } else {
+                quizFeedback.textContent = "Incorrect. The 'Azure AI Vision' resource is best if you only need vision services. For multiple services, 'Azure AI services' is the better choice.";
+                quizFeedback.className = 'mt-4 font-medium h-12 text-red-400';
+                e.target.classList.replace('bg-gray-800', 'bg-red-500');
+            }
+        }
+
+        // --- UI DISPLAY & LOGIC FUNCTIONS ---
+        function clearOverlays() {
+            const existingOverlays = imageDisplayWrapper.querySelectorAll('.text-overlay');
+            existingOverlays.forEach(overlay => overlay.remove());
+        }
+
+        function renderOverlays(data) {
+            clearOverlays();
+            
+            const wrapper = imageDisplayWrapper;
+            const img = imageDisplay;
+
+            const wrapperWidth = wrapper.clientWidth;
+            const wrapperHeight = wrapper.clientHeight;
+            const wrapperAspect = wrapperWidth / wrapperHeight;
+
+            const imgNaturalWidth = data.naturalWidth;
+            const imgNaturalHeight = data.naturalHeight;
+            const imgAspect = imgNaturalWidth / imgNaturalHeight;
+
+            let renderedWidth, renderedHeight, offsetX, offsetY;
+
+            // This logic calculates the actual size and position of the image
+            // when object-fit: contain is used.
+            if (wrapperAspect > imgAspect) {
+                // Wrapper is wider than the image, so image height fills the wrapper
+                renderedHeight = wrapperHeight;
+                renderedWidth = renderedHeight * imgAspect;
+                offsetX = (wrapperWidth - renderedWidth) / 2;
+                offsetY = 0;
+            } else {
+                // Wrapper is taller/narrower than the image, so image width fills the wrapper
+                renderedWidth = wrapperWidth;
+                renderedHeight = renderedWidth / imgAspect;
+                offsetX = 0;
+                offsetY = (wrapperHeight - renderedHeight) / 2;
+            }
+
+            if (renderedWidth === 0 || renderedHeight === 0) return;
+
+            const scaleX = renderedWidth / imgNaturalWidth;
+            const scaleY = renderedHeight / imgNaturalHeight;
+
+            data.results.pages[0].lines.forEach(line => {
+                line.words.forEach(word => {
+                    const [x1, y1, x2, y2] = word.box;
+                    const overlay = document.createElement('div');
+                    overlay.className = 'text-overlay';
+                    
+                    // Apply calculated scale and offset to position the boxes correctly
+                    overlay.style.left = `${(x1 * scaleX) + offsetX}px`;
+                    overlay.style.top = `${(y1 * scaleY) + offsetY}px`;
+                    overlay.style.width = `${(x2 - x1) * scaleX}px`;
+                    overlay.style.height = `${(y2 - y1) * scaleY}px`;
+
+                    imageDisplayWrapper.appendChild(overlay);
+                });
+            });
+        }
+
+        function displayExtractedContent(data) {
+            let contentHtml = '';
+            data.results.pages[0].lines.forEach(line => {
+                contentHtml += `<p>${line.text}</p>`;
+            });
+            contentWindow.innerHTML = contentHtml;
+        }
+
+        // --- START THE APP ---
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
 
